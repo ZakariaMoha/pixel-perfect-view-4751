@@ -228,6 +228,7 @@ export const statusMeta: Record<OrderStatus, { label: string; tone: string }> = 
 
 export type SourcingRequest = {
   id: string;
+  selectedQuoteId?: string;
   code: string;
   client: string;
   product: string;
@@ -297,6 +298,7 @@ export const sourcingRequests: SourcingRequest[] = [
 
 export type Quote = {
   id: string;
+  sourcingRequestId: string;
   agent: string;
   supplier: string;
   unitPriceCny: number;
@@ -313,6 +315,7 @@ export type Quote = {
 export const quotes: Quote[] = [
   {
     id: "q1",
+    sourcingRequestId: "1",
     agent: "Li Wei",
     supplier: "Shenzhen AudioTech",
     unitPriceCny: 58,
@@ -327,6 +330,7 @@ export const quotes: Quote[] = [
   },
   {
     id: "q2",
+    sourcingRequestId: "2",
     agent: "Zhang Min",
     supplier: "Dongguan SoundLab",
     unitPriceCny: 52,
@@ -341,6 +345,7 @@ export const quotes: Quote[] = [
   },
   {
     id: "q3",
+    sourcingRequestId: "4",
     agent: "Chen Hao",
     supplier: "Shenzhen VoxPro",
     unitPriceCny: 64,

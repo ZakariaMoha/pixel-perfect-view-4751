@@ -1,4 +1,5 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import {
   Bell,
   Boxes,
@@ -18,6 +19,17 @@ import {
   Wifi,
 } from "lucide-react";
 import { Badge } from "@/components/kit";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/kit";
+
+const PREFERENCES_EVENT = "tradehub:preferences-change";
 
 export const Route = createFileRoute("/app")({
   component: AdminLayout,
@@ -40,6 +52,37 @@ const nav = [
 ] as const;
 
 function AdminLayout() {
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notificationsRead, setNotificationsRead] = useState(false);
+  const [displayName, setDisplayName] = useState("Joan Mwangi");
+
+  useEffect(() => {
+    const loadDisplayName = () => {
+      try {
+        const serialized = window.localStorage.getItem("tradehub:preferences:v1");
+        if (serialized) {
+          const preferences: unknown = JSON.parse(serialized);
+          if (
+            typeof preferences === "object" &&
+            preferences !== null &&
+            "name" in preferences &&
+            typeof preferences.name === "string"
+          ) {
+            setDisplayName(preferences.name);
+            return;
+          }
+        }
+      } catch {
+        window.localStorage.removeItem("tradehub:preferences:v1");
+      }
+      setDisplayName("Joan Mwangi");
+    };
+
+    loadDisplayName();
+    window.addEventListener(PREFERENCES_EVENT, loadDisplayName);
+    return () => window.removeEventListener(PREFERENCES_EVENT, loadDisplayName);
+  }, []);
+
   return (
     <div className="min-h-screen bg-bridge">
       <div className="pointer-events-none fixed inset-0 grid-overlay opacity-40" />
@@ -58,8 +101,7 @@ function AdminLayout() {
                 to={item.to}
                 activeOptions={{ exact: "exact" in item ? item.exact : false }}
                 activeProps={{
-                  className:
-                    "bg-primary/15 text-foreground border-primary/30",
+                  className: "bg-primary/15 text-foreground border-primary/30",
                 }}
                 inactiveProps={{
                   className:
@@ -81,7 +123,7 @@ function AdminLayout() {
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-background/70 px-6 py-3.5 backdrop-blur-xl">
             <div className="flex items-center gap-3 overflow-x-auto lg:hidden">
-              {nav.slice(0, 5).map((item) => (
+              {nav.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
@@ -96,16 +138,31 @@ function AdminLayout() {
               <Badge tone="success">
                 <Wifi size={13} /> Synced
               </Badge>
-              <button className="relative rounded-md p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+              <button
+                aria-label="Open notifications"
+                className="relative rounded-md p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                onClick={() => setNotificationsOpen(true)}
+                type="button"
+              >
                 <Bell size={18} />
-                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
+                {!notificationsRead ? (
+                  <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
+                ) : null}
               </button>
-              <div className="flex items-center gap-2.5 rounded-md bg-secondary px-2.5 py-1.5">
+              <Link
+                to="/app/settings"
+                className="flex items-center gap-2.5 rounded-md bg-secondary px-2.5 py-1.5 hover:bg-secondary/80"
+              >
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-foreground">
-                  JM
+                  {displayName
+                    .split(/\s+/)
+                    .map((part) => part[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toLocaleUpperCase()}
                 </span>
-                <span className="hidden text-sm font-medium sm:block">Joan Mwangi</span>
-              </div>
+                <span className="hidden text-sm font-medium sm:block">{displayName}</span>
+              </Link>
             </div>
           </header>
 
@@ -114,6 +171,41 @@ function AdminLayout() {
           </main>
         </div>
       </div>
+      <Dialog open={notificationsOpen} onOpenChange={setNotificationsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Notifications</DialogTitle>
+            <DialogDescription>Recent updates from the TradeHub workspace.</DialogDescription>
+          </DialogHeader>
+          <div className="divide-y divide-border">
+            {[
+              [
+                "Order milestone",
+                "KE-2026-0847 cleared Mombasa port; Nairobi delivery is scheduled for 12 Oct.",
+              ],
+              ["Payment received", "Nairobi Home Depot deposit was recorded against KE-2026-0846."],
+              ["New quote", "Li Wei submitted a supplier quote for SR-2026-0912."],
+            ].map(([title, detail]) => (
+              <div key={title} className="py-3">
+                <p className="text-sm font-semibold">{title}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{detail}</p>
+              </div>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="glass"
+              onClick={() => {
+                setNotificationsRead(true);
+                setNotificationsOpen(false);
+              }}
+            >
+              Mark all as read
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

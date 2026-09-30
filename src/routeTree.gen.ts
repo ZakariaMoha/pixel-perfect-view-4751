@@ -12,6 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppAgentsRouteImport } from './routes/app.agents'
+import { Route as AppClientsRouteImport } from './routes/app.clients'
+import { Route as AppFxRouteImport } from './routes/app.fx'
+import { Route as AppInboxRouteImport } from './routes/app.inbox'
+import { Route as AppInvoicesRouteImport } from './routes/app.invoices'
+import { Route as AppLogisticsRouteImport } from './routes/app.logistics'
+import { Route as AppMarketRouteImport } from './routes/app.market'
+import { Route as AppReportsRouteImport } from './routes/app.reports'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppSuppliersRouteImport } from './routes/app.suppliers'
 import { Route as AppOrdersIndexRouteImport } from './routes/app.orders.index'
 import { Route as AppOrdersIdRouteImport } from './routes/app.orders.$id'
 import { Route as AppSourcingIndexRouteImport } from './routes/app.sourcing.index'
@@ -30,6 +40,56 @@ const AppRoute = AppRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAgentsRoute = AppAgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppClientsRoute = AppClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFxRoute = AppFxRouteImport.update({
+  id: '/fx',
+  path: '/fx',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInboxRoute = AppInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInvoicesRoute = AppInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLogisticsRoute = AppLogisticsRouteImport.update({
+  id: '/logistics',
+  path: '/logistics',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketRoute = AppMarketRouteImport.update({
+  id: '/market',
+  path: '/market',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSuppliersRoute = AppSuppliersRouteImport.update({
+  id: '/suppliers',
+  path: '/suppliers',
   getParentRoute: () => AppRoute,
 } as any)
 const AppOrdersIndexRoute = AppOrdersIndexRouteImport.update({
@@ -56,6 +116,16 @@ const AppSourcingIdRoute = AppSourcingIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/app/agents': typeof AppAgentsRoute
+  '/app/clients': typeof AppClientsRoute
+  '/app/fx': typeof AppFxRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/invoices': typeof AppInvoicesRoute
+  '/app/logistics': typeof AppLogisticsRoute
+  '/app/market': typeof AppMarketRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/suppliers': typeof AppSuppliersRoute
   '/app/': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
   '/app/sourcing/$id': typeof AppSourcingIdRoute
@@ -64,6 +134,16 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app/agents': typeof AppAgentsRoute
+  '/app/clients': typeof AppClientsRoute
+  '/app/fx': typeof AppFxRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/invoices': typeof AppInvoicesRoute
+  '/app/logistics': typeof AppLogisticsRoute
+  '/app/market': typeof AppMarketRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/suppliers': typeof AppSuppliersRoute
   '/app': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
   '/app/sourcing/$id': typeof AppSourcingIdRoute
@@ -74,6 +154,16 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/app/agents': typeof AppAgentsRoute
+  '/app/clients': typeof AppClientsRoute
+  '/app/fx': typeof AppFxRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/invoices': typeof AppInvoicesRoute
+  '/app/logistics': typeof AppLogisticsRoute
+  '/app/market': typeof AppMarketRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/suppliers': typeof AppSuppliersRoute
   '/app/': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
   '/app/sourcing/$id': typeof AppSourcingIdRoute
@@ -85,6 +175,16 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/app/agents'
+    | '/app/clients'
+    | '/app/fx'
+    | '/app/inbox'
+    | '/app/invoices'
+    | '/app/logistics'
+    | '/app/market'
+    | '/app/reports'
+    | '/app/settings'
+    | '/app/suppliers'
     | '/app/'
     | '/app/orders/$id'
     | '/app/sourcing/$id'
@@ -93,6 +193,16 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/app/agents'
+    | '/app/clients'
+    | '/app/fx'
+    | '/app/inbox'
+    | '/app/invoices'
+    | '/app/logistics'
+    | '/app/market'
+    | '/app/reports'
+    | '/app/settings'
+    | '/app/suppliers'
     | '/app'
     | '/app/orders/$id'
     | '/app/sourcing/$id'
@@ -102,6 +212,16 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/app/agents'
+    | '/app/clients'
+    | '/app/fx'
+    | '/app/inbox'
+    | '/app/invoices'
+    | '/app/logistics'
+    | '/app/market'
+    | '/app/reports'
+    | '/app/settings'
+    | '/app/suppliers'
     | '/app/'
     | '/app/orders/$id'
     | '/app/sourcing/$id'
@@ -137,6 +257,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/agents': {
+      id: '/app/agents'
+      path: '/agents'
+      fullPath: '/app/agents'
+      preLoaderRoute: typeof AppAgentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/clients': {
+      id: '/app/clients'
+      path: '/clients'
+      fullPath: '/app/clients'
+      preLoaderRoute: typeof AppClientsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/fx': {
+      id: '/app/fx'
+      path: '/fx'
+      fullPath: '/app/fx'
+      preLoaderRoute: typeof AppFxRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/inbox': {
+      id: '/app/inbox'
+      path: '/inbox'
+      fullPath: '/app/inbox'
+      preLoaderRoute: typeof AppInboxRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/invoices': {
+      id: '/app/invoices'
+      path: '/invoices'
+      fullPath: '/app/invoices'
+      preLoaderRoute: typeof AppInvoicesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/logistics': {
+      id: '/app/logistics'
+      path: '/logistics'
+      fullPath: '/app/logistics'
+      preLoaderRoute: typeof AppLogisticsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/market': {
+      id: '/app/market'
+      path: '/market'
+      fullPath: '/app/market'
+      preLoaderRoute: typeof AppMarketRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/reports': {
+      id: '/app/reports'
+      path: '/reports'
+      fullPath: '/app/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/suppliers': {
+      id: '/app/suppliers'
+      path: '/suppliers'
+      fullPath: '/app/suppliers'
+      preLoaderRoute: typeof AppSuppliersRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/orders/': {
       id: '/app/orders/'
       path: '/orders'
@@ -169,6 +359,16 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAgentsRoute: typeof AppAgentsRoute
+  AppClientsRoute: typeof AppClientsRoute
+  AppFxRoute: typeof AppFxRoute
+  AppInboxRoute: typeof AppInboxRoute
+  AppInvoicesRoute: typeof AppInvoicesRoute
+  AppLogisticsRoute: typeof AppLogisticsRoute
+  AppMarketRoute: typeof AppMarketRoute
+  AppReportsRoute: typeof AppReportsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppSuppliersRoute: typeof AppSuppliersRoute
   AppIndexRoute: typeof AppIndexRoute
   AppOrdersIdRoute: typeof AppOrdersIdRoute
   AppSourcingIdRoute: typeof AppSourcingIdRoute
@@ -177,6 +377,16 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAgentsRoute: AppAgentsRoute,
+  AppClientsRoute: AppClientsRoute,
+  AppFxRoute: AppFxRoute,
+  AppInboxRoute: AppInboxRoute,
+  AppInvoicesRoute: AppInvoicesRoute,
+  AppLogisticsRoute: AppLogisticsRoute,
+  AppMarketRoute: AppMarketRoute,
+  AppReportsRoute: AppReportsRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppSuppliersRoute: AppSuppliersRoute,
   AppIndexRoute: AppIndexRoute,
   AppOrdersIdRoute: AppOrdersIdRoute,
   AppSourcingIdRoute: AppSourcingIdRoute,
