@@ -24,6 +24,10 @@ import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppSuppliersRouteImport } from './routes/app.suppliers'
 import { Route as AppOrdersIndexRouteImport } from './routes/app.orders.index'
 import { Route as AppOrdersIdRouteImport } from './routes/app.orders.$id'
+import { Route as AppPaymentsIndexRouteImport } from './routes/app.payments.index'
+import { Route as AppPaymentsCommissionsRouteImport } from './routes/app.payments.commissions'
+import { Route as AppPaymentsLedgerRouteImport } from './routes/app.payments.ledger'
+import { Route as AppPaymentsRecurringRouteImport } from './routes/app.payments.recurring'
 import { Route as AppSourcingIndexRouteImport } from './routes/app.sourcing.index'
 import { Route as AppSourcingIdRouteImport } from './routes/app.sourcing.$id'
 
@@ -102,6 +106,26 @@ const AppOrdersIdRoute = AppOrdersIdRouteImport.update({
   path: '/orders/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPaymentsIndexRoute = AppPaymentsIndexRouteImport.update({
+  id: '/payments/',
+  path: '/payments/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsCommissionsRoute = AppPaymentsCommissionsRouteImport.update({
+  id: '/payments/commissions',
+  path: '/payments/commissions',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsLedgerRoute = AppPaymentsLedgerRouteImport.update({
+  id: '/payments/ledger',
+  path: '/payments/ledger',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsRecurringRoute = AppPaymentsRecurringRouteImport.update({
+  id: '/payments/recurring',
+  path: '/payments/recurring',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSourcingIndexRoute = AppSourcingIndexRouteImport.update({
   id: '/sourcing/',
   path: '/sourcing/',
@@ -128,8 +152,12 @@ export interface FileRoutesByFullPath {
   '/app/suppliers': typeof AppSuppliersRoute
   '/app/': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
+  '/app/payments/commissions': typeof AppPaymentsCommissionsRoute
+  '/app/payments/ledger': typeof AppPaymentsLedgerRoute
+  '/app/payments/recurring': typeof AppPaymentsRecurringRoute
   '/app/sourcing/$id': typeof AppSourcingIdRoute
   '/app/orders/': typeof AppOrdersIndexRoute
+  '/app/payments/': typeof AppPaymentsIndexRoute
   '/app/sourcing/': typeof AppSourcingIndexRoute
 }
 export interface FileRoutesByTo {
@@ -146,8 +174,12 @@ export interface FileRoutesByTo {
   '/app/suppliers': typeof AppSuppliersRoute
   '/app': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
+  '/app/payments/commissions': typeof AppPaymentsCommissionsRoute
+  '/app/payments/ledger': typeof AppPaymentsLedgerRoute
+  '/app/payments/recurring': typeof AppPaymentsRecurringRoute
   '/app/sourcing/$id': typeof AppSourcingIdRoute
   '/app/orders': typeof AppOrdersIndexRoute
+  '/app/payments': typeof AppPaymentsIndexRoute
   '/app/sourcing': typeof AppSourcingIndexRoute
 }
 export interface FileRoutesById {
@@ -166,8 +198,12 @@ export interface FileRoutesById {
   '/app/suppliers': typeof AppSuppliersRoute
   '/app/': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
+  '/app/payments/commissions': typeof AppPaymentsCommissionsRoute
+  '/app/payments/ledger': typeof AppPaymentsLedgerRoute
+  '/app/payments/recurring': typeof AppPaymentsRecurringRoute
   '/app/sourcing/$id': typeof AppSourcingIdRoute
   '/app/orders/': typeof AppOrdersIndexRoute
+  '/app/payments/': typeof AppPaymentsIndexRoute
   '/app/sourcing/': typeof AppSourcingIndexRoute
 }
 export interface FileRouteTypes {
@@ -187,8 +223,12 @@ export interface FileRouteTypes {
     | '/app/suppliers'
     | '/app/'
     | '/app/orders/$id'
+    | '/app/payments/commissions'
+    | '/app/payments/ledger'
+    | '/app/payments/recurring'
     | '/app/sourcing/$id'
     | '/app/orders/'
+    | '/app/payments/'
     | '/app/sourcing/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -205,8 +245,12 @@ export interface FileRouteTypes {
     | '/app/suppliers'
     | '/app'
     | '/app/orders/$id'
+    | '/app/payments/commissions'
+    | '/app/payments/ledger'
+    | '/app/payments/recurring'
     | '/app/sourcing/$id'
     | '/app/orders'
+    | '/app/payments'
     | '/app/sourcing'
   id:
     | '__root__'
@@ -224,8 +268,12 @@ export interface FileRouteTypes {
     | '/app/suppliers'
     | '/app/'
     | '/app/orders/$id'
+    | '/app/payments/commissions'
+    | '/app/payments/ledger'
+    | '/app/payments/recurring'
     | '/app/sourcing/$id'
     | '/app/orders/'
+    | '/app/payments/'
     | '/app/sourcing/'
   fileRoutesById: FileRoutesById
 }
@@ -341,6 +389,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppOrdersIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/payments/': {
+      id: '/app/payments/'
+      path: '/payments'
+      fullPath: '/app/payments/'
+      preLoaderRoute: typeof AppPaymentsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/payments/commissions': {
+      id: '/app/payments/commissions'
+      path: '/payments/commissions'
+      fullPath: '/app/payments/commissions'
+      preLoaderRoute: typeof AppPaymentsCommissionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/payments/ledger': {
+      id: '/app/payments/ledger'
+      path: '/payments/ledger'
+      fullPath: '/app/payments/ledger'
+      preLoaderRoute: typeof AppPaymentsLedgerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/payments/recurring': {
+      id: '/app/payments/recurring'
+      path: '/payments/recurring'
+      fullPath: '/app/payments/recurring'
+      preLoaderRoute: typeof AppPaymentsRecurringRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/sourcing/': {
       id: '/app/sourcing/'
       path: '/sourcing'
@@ -371,8 +447,12 @@ interface AppRouteChildren {
   AppSuppliersRoute: typeof AppSuppliersRoute
   AppIndexRoute: typeof AppIndexRoute
   AppOrdersIdRoute: typeof AppOrdersIdRoute
+  AppPaymentsCommissionsRoute: typeof AppPaymentsCommissionsRoute
+  AppPaymentsLedgerRoute: typeof AppPaymentsLedgerRoute
+  AppPaymentsRecurringRoute: typeof AppPaymentsRecurringRoute
   AppSourcingIdRoute: typeof AppSourcingIdRoute
   AppOrdersIndexRoute: typeof AppOrdersIndexRoute
+  AppPaymentsIndexRoute: typeof AppPaymentsIndexRoute
   AppSourcingIndexRoute: typeof AppSourcingIndexRoute
 }
 
@@ -389,8 +469,12 @@ const AppRouteChildren: AppRouteChildren = {
   AppSuppliersRoute: AppSuppliersRoute,
   AppIndexRoute: AppIndexRoute,
   AppOrdersIdRoute: AppOrdersIdRoute,
+  AppPaymentsCommissionsRoute: AppPaymentsCommissionsRoute,
+  AppPaymentsLedgerRoute: AppPaymentsLedgerRoute,
+  AppPaymentsRecurringRoute: AppPaymentsRecurringRoute,
   AppSourcingIdRoute: AppSourcingIdRoute,
   AppOrdersIndexRoute: AppOrdersIndexRoute,
+  AppPaymentsIndexRoute: AppPaymentsIndexRoute,
   AppSourcingIndexRoute: AppSourcingIndexRoute,
 }
 
