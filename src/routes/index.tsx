@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "TradeHub is the trade and logistics platform for the China to Kenya import corridor: sourcing, RFQs, orders, shipments, FX and payments in one offline-capable workspace.",
+          "TradeHub is the trade and logistics platform for the China to Kenya import corridor: sourcing, RFQs, orders, shipments, FX and payments in one workspace.",
       },
       {
         property: "og:title",
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Source from 1688, compare agent quotes, track shipments to Nairobi and invoice in KES — online or offline.",
+          "Source from 1688, compare agent quotes, track shipments to Nairobi and invoice in KES from one operating workspace.",
       },
     ],
   }),
@@ -39,26 +39,70 @@ export const Route = createFileRoute("/")({
 });
 
 const problems = [
-  { icon: MessageSquare, title: "Scattered across chats", text: "Orders live in WhatsApp threads, WeChat groups and spreadsheets nobody trusts." },
-  { icon: Eye, title: "No visibility", text: "Clients call daily asking where their goods are. Nobody has a straight answer." },
-  { icon: TrendingUp, title: "FX eats the margin", text: "CNY, USD and KES move between quote and delivery. Profit disappears silently." },
-  { icon: WifiOff, title: "Connections drop", text: "Ports, warehouses and markets are exactly where the network fails." },
+  {
+    icon: MessageSquare,
+    title: "Scattered across chats",
+    text: "Orders live in WhatsApp threads, WeChat groups and spreadsheets nobody trusts.",
+  },
+  {
+    icon: Eye,
+    title: "No visibility",
+    text: "Clients call daily asking where their goods are. Nobody has a straight answer.",
+  },
+  {
+    icon: TrendingUp,
+    title: "FX eats the margin",
+    text: "CNY, USD and KES move between quote and delivery. Profit disappears silently.",
+  },
+  {
+    icon: WifiOff,
+    title: "Connections drop",
+    text: "Ports, warehouses and markets are exactly where the network fails.",
+  },
 ];
 
 const solutions = [
-  { icon: Boxes, title: "One sourcing engine", text: "Inquiry to RFQ to scored agent quotes to a client quotation, with codes on every step." },
-  { icon: Ship, title: "Shipment tracking", text: "Production, QC, warehouse, transit, customs, delivery — with photos at every milestone." },
-  { icon: Gauge, title: "Live profit & KPIs", text: "Revenue, margin, FX impact, commissions and on-time rate, updated as orders move." },
-  { icon: WifiOff, title: "Works offline", text: "Everything saves on the device and syncs the moment the signal comes back." },
+  {
+    icon: Boxes,
+    title: "One sourcing engine",
+    text: "Inquiry to RFQ to scored agent quotes to a client quotation, with codes on every step.",
+  },
+  {
+    icon: Ship,
+    title: "Shipment tracking",
+    text: "Production, QC, warehouse, transit, customs, delivery — with photos at every milestone.",
+  },
+  {
+    icon: Gauge,
+    title: "Live profit & KPIs",
+    text: "Revenue, margin, FX impact, commissions and on-time rate, updated as orders move.",
+  },
+  {
+    icon: WifiOff,
+    title: "Built for the corridor",
+    text: "Keep sourcing, shipment, FX and payment work visible in one operational workspace.",
+  },
 ];
 
 const steps = [
-  { n: "01", t: "Client inquiry", d: "Photos and specs arrive on WhatsApp and become a sourcing request." },
+  {
+    n: "01",
+    t: "Client inquiry",
+    d: "Photos and specs arrive on WhatsApp and become a sourcing request.",
+  },
   { n: "02", t: "RFQ to agents", d: "Pushed to your China agents on WeChat with a deadline." },
   { n: "03", t: "Scored quotes", d: "Price, quality, speed and reliability ranked side by side." },
   { n: "04", t: "Quote the client", d: "Markup, service fee and locked FX, sent as a PDF." },
-  { n: "05", t: "Produce & inspect", d: "1688 purchase, production photos, pre-shipment inspection." },
-  { n: "06", t: "Ship & deliver", d: "Warehouse, freight, customs, Nairobi delivery, final invoice." },
+  {
+    n: "05",
+    t: "Produce & inspect",
+    d: "1688 purchase, production photos, pre-shipment inspection.",
+  },
+  {
+    n: "06",
+    t: "Ship & deliver",
+    d: "Warehouse, freight, customs, Nairobi delivery, final invoice.",
+  },
 ];
 
 function Landing() {
@@ -73,9 +117,15 @@ function Landing() {
             <span className="text-lg font-bold tracking-tight">TradeHub</span>
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
-            <a href="#problem" className="transition-colors hover:text-foreground">Problem</a>
-            <a href="#solution" className="transition-colors hover:text-foreground">Platform</a>
-            <a href="#flow" className="transition-colors hover:text-foreground">How it works</a>
+            <a href="#problem" className="transition-colors hover:text-foreground">
+              Problem
+            </a>
+            <a href="#solution" className="transition-colors hover:text-foreground">
+              Platform
+            </a>
+            <a href="#flow" className="transition-colors hover:text-foreground">
+              How it works
+            </a>
           </nav>
           <Link to="/app">
             <Button>
@@ -101,9 +151,9 @@ function Landing() {
             <span className="gradient-text">Tracked. Trusted. Delivered.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            One workspace for the China–Kenya import corridor: sourcing requests,
-            agent quotes, production, freight, customs, FX and invoicing — and it
-            keeps working when the network doesn't.
+            One workspace for the China–Kenya import corridor: sourcing requests, agent quotes,
+            production, freight, customs, FX and invoicing — and it keeps working when the network
+            doesn't.
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <Link to="/app">
@@ -209,15 +259,15 @@ function Landing() {
       </section>
 
       <section className="mx-auto max-w-7xl px-6 pb-24">
-        <Card className="relative overflow-hidden rounded-2xl p-12 text-center">
+        <Card className="relative overflow-hidden rounded-xl p-12 text-center">
           <div className="pointer-events-none absolute inset-0 grid-overlay opacity-40" />
           <div className="relative">
             <h2 className="text-4xl font-semibold tracking-[-0.02em]">
               Put your whole corridor on one screen
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-              Explore the full workspace with live demo data — dashboard, sourcing,
-              orders, inbox, market analysis and reports.
+              Explore the full workspace with live demo data — dashboard, sourcing, orders, inbox,
+              market analysis and reports.
             </p>
             <Link to="/app">
               <Button className="mt-7 px-6 py-3 text-base">

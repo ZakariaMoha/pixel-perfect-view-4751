@@ -6,10 +6,7 @@ export type IdentifiedRecord = { id: string };
 
 function isIdentifiedRecord(value: unknown): value is IdentifiedRecord {
   return (
-    typeof value === "object" &&
-    value !== null &&
-    "id" in value &&
-    typeof value.id === "string"
+    typeof value === "object" && value !== null && "id" in value && typeof value.id === "string"
   );
 }
 
@@ -74,9 +71,7 @@ export function usePersistentList<T extends IdentifiedRecord>(
 
   const update = (id: string, changes: Partial<Omit<T, "id">>) => {
     persist(
-      records.map((record) =>
-        record.id === id ? ({ ...record, ...changes } as T) : record,
-      ),
+      records.map((record) => (record.id === id ? ({ ...record, ...changes } as T) : record)),
     );
   };
 

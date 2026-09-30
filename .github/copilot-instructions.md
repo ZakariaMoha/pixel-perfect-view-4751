@@ -7,7 +7,7 @@ You are the senior full-stack engineer for TradeHub, a SaaS platform connecting 
 - React 19 with strict TypeScript.
 - TanStack Start and TanStack Router, with file-based routes in `src/routes/`.
 - Vite 8, Tailwind CSS 4, and shadcn/Radix components.
-- Bun is the package manager; `bun.lock` is committed.
+- npm is the package manager; `package-lock.json` is committed.
 - App-specific components are in `src/components/kit.tsx`.
 - Shared UI primitives are in `src/components/ui/`.
 - Demo data and utility functions are in `src/lib/`.
@@ -70,11 +70,6 @@ TradeHub connects Kenyan importers with Chinese factories through sourcing agent
 2. Match existing patterns and avoid unnecessary dependencies.
 3. Give every new route a page header and a useful empty/loading state.
 4. Keep pages mobile-friendly and interactive elements accessible.
-5. Run `bun run typecheck` after TypeScript changes.
+5. Run `npm run typecheck` after TypeScript changes.
 
 ## Current Phase: Foundation
-
-- Keep the design tokens aligned with the palette above.
-- Keep every sidebar destination backed by a route file.
-- Fix sourcing quote ownership only when each quote can be associated with its request in the data model.
-- Do not add authentication or modify demo data until explicitly requested.
