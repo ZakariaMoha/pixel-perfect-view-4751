@@ -1,24 +1,24 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
+  BarChart,
   Bell,
   Boxes,
   Building2,
-  CircleDollarSign,
+  DollarSign,
   Factory,
+  FileText,
   Gauge,
   Globe2,
   Home,
   Inbox,
-  LineChart,
   Menu,
   MessageSquare,
   MoreHorizontal,
+  Package,
   PackageSearch,
   Search,
-  Receipt,
   Settings,
-  Ship,
   Truck,
   Users,
 } from "lucide-react";
@@ -38,6 +38,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const PREFERENCES_EVENT = "tradehub:preferences-change";
 
@@ -45,34 +46,50 @@ export const Route = createFileRoute("/app")({
   component: AdminLayout,
 });
 
-const nav = [
-  { to: "/app", label: "Dashboard", icon: Gauge, exact: true },
-  { to: "/app/sourcing", label: "Sourcing", icon: PackageSearch },
-  { to: "/app/orders", label: "Orders", icon: Boxes },
-  { to: "/app/inbox", label: "Inbox", icon: Inbox },
+const navigationSections = [
+  {
+    title: "OPERATIONS",
+    items: [
+      { to: "/app", label: "Dashboard", icon: Gauge, exact: true },
+      { to: "/app/sourcing", label: "Sourcing", icon: Search },
+      { to: "/app/orders", label: "Orders", icon: Package },
+      { to: "/app/inbox", label: "Inbox", icon: MessageSquare },
+    ],
+  },
+  {
+    title: "MONEY",
+    items: [
+      { to: "/app/reports", label: "Reports", icon: BarChart },
+      { to: "/app/fx", label: "FX", icon: DollarSign },
+      { to: "/app/invoices", label: "Invoices", icon: FileText },
+    ],
+  },
+  {
+    title: "SYSTEM",
+    items: [{ to: "/app/settings", label: "Settings", icon: Settings }],
+  },
+] as const;
+
+const moreNav = [
   { to: "/app/clients", label: "Clients", icon: Users },
   { to: "/app/agents", label: "Agents", icon: Building2 },
   { to: "/app/suppliers", label: "Suppliers", icon: Factory },
   { to: "/app/logistics", label: "Logistics", icon: Truck },
-  { to: "/app/market", label: "Market analysis", icon: LineChart },
-  { to: "/app/reports", label: "Reports & profit", icon: Ship },
-  { to: "/app/fx", label: "FX & currency", icon: CircleDollarSign },
-  { to: "/app/invoices", label: "Invoices", icon: Receipt },
+  { to: "/app/reports", label: "Reports", icon: BarChart },
+  { to: "/app/fx", label: "FX", icon: DollarSign },
+  { to: "/app/invoices", label: "Invoices", icon: FileText },
   { to: "/app/settings", label: "Settings", icon: Settings },
 ] as const;
 
 const mobilePrimaryNav = [
   { to: "/app", label: "Home", icon: Home, exact: true },
   { to: "/app/sourcing", label: "Sourcing", icon: Search },
-  { to: "/app/orders", label: "Orders", icon: Boxes },
+  { to: "/app/orders", label: "Orders", icon: Package },
   { to: "/app/inbox", label: "Inbox", icon: MessageSquare },
 ] as const;
 
-const mobileMoreNav = nav.filter(
-  (item) => !mobilePrimaryNav.some((primaryItem) => primaryItem.to === item.to),
-);
-
 function AdminLayout() {
+  const isMobile = useIsMobile();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notificationsRead, setNotificationsRead] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -107,56 +124,67 @@ function AdminLayout() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bridge">
+    <div className="min-h-screen bg-bg">
       <div className="pointer-events-none fixed inset-0 grid-overlay opacity-40" />
       <div className="relative flex">
-        <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-border bg-sidebar/70 md:flex">
+        <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-border bg-bg-glass/70 md:flex">
           <Link to="/" className="flex items-center gap-2.5 px-5 py-5">
             <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <Globe2 size={18} />
             </span>
-            <span className="text-lg font-bold tracking-tight">TradeHub</span>
+            <span className="text-lg font-bold tracking-tight text-fg">TradeHub</span>
           </Link>
-          <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 pb-6">
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                activeOptions={{ exact: "exact" in item ? item.exact : false }}
-                activeProps={{
-                  className: "bg-primary/15 text-foreground border-primary/30",
-                }}
-                inactiveProps={{
-                  className:
-                    "text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground",
-                }}
-                className="flex items-center gap-3 rounded-md border px-3 py-2.5 text-sm font-medium transition-colors"
-              >
-                <item.icon size={17} />
-                {item.label}
-              </Link>
+          <nav className="flex-1 space-y-4 overflow-y-auto px-3 pb-6">
+            {navigationSections.map((section) => (
+              <div key={section.title}>
+                <p className="px-3 py-2 text-[11px] uppercase tracking-[0.12em] text-fg-faint">
+                  {section.title}
+                </p>
+                <div className="space-y-1">
+                  {section.items.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      activeOptions={{ exact: "exact" in item ? item.exact : false }}
+                      activeProps={{ className: "border-primary/30 bg-primary/15 text-fg" }}
+                      inactiveProps={{
+                        className:
+                          "border-transparent text-fg-muted hover:bg-bg-glass-hover hover:text-fg",
+                      }}
+                      className="flex min-h-11 items-center gap-3 rounded-md border px-3 text-sm font-medium transition-colors"
+                    >
+                      <item.icon size={17} />
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ))}
           </nav>
-          <div className="border-t border-border px-5 py-4 text-xs text-subtle">
-            <p className="font-mono">CNY 7.22 · KES 129.4</p>
-            <p className="mt-1">Rates locked 26 Sep</p>
+          <div className="border-t border-border px-5 py-4 text-xs text-fg-subtle">
+            <p className="font-mono text-fg">CNY 7.22 · KES 129.4</p>
+            <p className="mt-1 text-fg-muted">Rates locked 26 Sep</p>
           </div>
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-background/70 px-4 py-3.5 backdrop-blur-xl md:px-6">
-            <button
-              aria-label="Open navigation"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground md:hidden"
-              onClick={() => setMobileMenuOpen(true)}
-              type="button"
-            >
-              <Menu size={20} />
-            </button>
+          <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-bg/70 px-4 py-3.5 backdrop-blur-xl md:px-6">
+            {isMobile ? (
+              <button
+                aria-label="Open navigation"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-fg-muted hover:bg-bg-glass-hover hover:text-fg"
+                onClick={() => setMobileMenuOpen(true)}
+                type="button"
+              >
+                <Menu size={20} />
+              </button>
+            ) : (
+              <div className="h-11 w-11" aria-hidden="true" />
+            )}
             <div className="ml-auto flex items-center gap-3">
               <button
                 aria-label="Open notifications"
-                className="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                className="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 text-fg-muted transition-colors hover:bg-bg-glass-hover hover:text-fg"
                 onClick={() => setNotificationsOpen(true)}
                 type="button"
               >
@@ -167,9 +195,9 @@ function AdminLayout() {
               </button>
               <Link
                 to="/app/settings"
-                className="flex min-h-11 items-center gap-2.5 rounded-md bg-secondary px-2.5 py-1.5 hover:bg-secondary/80"
+                className="flex min-h-11 items-center gap-2.5 rounded-md bg-bg-glass px-2.5 py-1.5 hover:bg-bg-glass-hover"
               >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-foreground">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-xs font-bold text-bg">
                   {displayName
                     .split(/\s+/)
                     .map((part) => part[0])
@@ -177,7 +205,7 @@ function AdminLayout() {
                     .slice(0, 2)
                     .toLocaleUpperCase()}
                 </span>
-                <span className="hidden text-sm font-medium sm:block">{displayName}</span>
+                <span className="hidden text-sm font-medium text-fg sm:block">{displayName}</span>
               </Link>
             </div>
           </header>
@@ -187,43 +215,54 @@ function AdminLayout() {
           </main>
         </div>
       </div>
+
       <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <SheetContent side="left" className="w-[min(86vw,20rem)] px-4">
+        <SheetContent side="left" className="w-[280px] px-4">
           <SheetHeader className="px-1 text-left">
             <SheetTitle>TradeHub navigation</SheetTitle>
             <SheetDescription>Move through the workspace.</SheetDescription>
           </SheetHeader>
-          <nav className="mt-6 space-y-1 overflow-y-auto">
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                activeOptions={{ exact: "exact" in item ? item.exact : false }}
-                activeProps={{ className: "bg-primary/15 text-foreground border-primary/30" }}
-                inactiveProps={{ className: "text-muted-foreground border-transparent" }}
-                className="flex min-h-11 items-center gap-3 rounded-md border px-3 text-sm font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <item.icon size={17} />
-                {item.label}
-              </Link>
+          <nav className="mt-6 space-y-4">
+            {navigationSections.map((section) => (
+              <div key={section.title}>
+                <p className="px-3 py-2 text-[11px] uppercase tracking-[0.12em] text-fg-faint">
+                  {section.title}
+                </p>
+                <div className="space-y-1">
+                  {section.items.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      activeOptions={{ exact: "exact" in item ? item.exact : false }}
+                      activeProps={{ className: "bg-primary/15 text-fg border-primary/30" }}
+                      inactiveProps={{ className: "text-fg-muted border-transparent" }}
+                      className="flex min-h-11 items-center gap-3 rounded-md border px-3 text-sm font-medium"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <item.icon size={17} />
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ))}
           </nav>
         </SheetContent>
       </Sheet>
+
       <Sheet open={mobileMoreOpen} onOpenChange={setMobileMoreOpen}>
-        <SheetContent side="left" className="w-[min(86vw,20rem)] px-4">
+        <SheetContent side="left" className="w-[280px] px-4">
           <SheetHeader className="px-1 text-left">
-            <SheetTitle>More workspace tools</SheetTitle>
-            <SheetDescription>Manage the rest of your corridor operations.</SheetDescription>
+            <SheetTitle>More tools</SheetTitle>
+            <SheetDescription>Client, agent, and operational views.</SheetDescription>
           </SheetHeader>
-          <nav className="mt-6 space-y-1 overflow-y-auto">
-            {mobileMoreNav.map((item) => (
+          <nav className="mt-6 space-y-1">
+            {moreNav.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className="flex min-h-11 items-center gap-3 rounded-md px-3 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
-                activeProps={{ className: "bg-primary/15 text-foreground" }}
+                className="flex min-h-11 items-center gap-3 rounded-md px-3 text-sm font-medium text-fg-muted hover:bg-bg-glass-hover hover:text-fg"
+                activeProps={{ className: "bg-primary/15 text-fg" }}
                 onClick={() => setMobileMoreOpen(false)}
               >
                 <item.icon size={17} />
@@ -233,21 +272,31 @@ function AdminLayout() {
           </nav>
         </SheetContent>
       </Sheet>
-      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border bg-background/95 px-2 pb-[env(safe-area-inset-bottom)] md:hidden">
+
+      <nav
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border px-2 pb-[env(safe-area-inset-bottom)] md:hidden"
+        style={{
+          height: "56px",
+          background: "rgba(15, 23, 42, 0.95)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+        }}
+      >
         {mobilePrimaryNav.map((item) => (
           <Link
             key={item.to}
             to={item.to}
             activeOptions={{ exact: "exact" in item ? item.exact : false }}
             activeProps={{ className: "text-primary" }}
-            className="flex min-h-11 flex-col items-center justify-center gap-0.5 py-2 text-[11px] text-muted-foreground"
+            inactiveProps={{ className: "text-fg-muted" }}
+            className="flex min-h-11 flex-col items-center justify-center gap-0.5 py-2 text-[10px]"
           >
             <item.icon size={18} />
             {item.label}
           </Link>
         ))}
         <button
-          className="flex min-h-11 flex-col items-center justify-center gap-0.5 py-2 text-[11px] text-muted-foreground"
+          className="flex min-h-11 flex-col items-center justify-center gap-0.5 py-2 text-[10px] text-fg-muted"
           onClick={() => setMobileMoreOpen(true)}
           type="button"
         >
@@ -255,6 +304,7 @@ function AdminLayout() {
           More
         </button>
       </nav>
+
       <Dialog open={notificationsOpen} onOpenChange={setNotificationsOpen}>
         <DialogContent>
           <DialogHeader>
@@ -271,8 +321,8 @@ function AdminLayout() {
               ["New quote", "Li Wei submitted a supplier quote for SR-2026-0912."],
             ].map(([title, detail]) => (
               <div key={title} className="py-3">
-                <p className="text-sm font-semibold">{title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{detail}</p>
+                <p className="text-sm font-semibold text-fg">{title}</p>
+                <p className="mt-1 text-sm text-fg-muted">{detail}</p>
               </div>
             ))}
           </div>

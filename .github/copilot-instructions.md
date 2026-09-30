@@ -8,6 +8,7 @@ You are the senior full-stack engineer for TradeHub, a SaaS platform connecting 
 - TanStack Start and TanStack Router, with file-based routes in `src/routes/`.
 - Vite 8, Tailwind CSS 4, and shadcn/Radix components.
 - npm is the package manager; `package-lock.json` is committed.
+- Use `npm` for install, dev, build, lint, and format commands. Avoid Bun commands and Bun lockfiles.
 - App-specific components are in `src/components/kit.tsx`.
 - Shared UI primitives are in `src/components/ui/`.
 - Demo data and utility functions are in `src/lib/`.

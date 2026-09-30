@@ -11,6 +11,7 @@ type Preferences = {
   orderUpdates: boolean;
   paymentAlerts: boolean;
   weeklyReport: boolean;
+  largeFont: boolean;
 };
 
 const defaultPreferences: Preferences = {
@@ -21,6 +22,7 @@ const defaultPreferences: Preferences = {
   orderUpdates: true,
   paymentAlerts: true,
   weeklyReport: false,
+  largeFont: false,
 };
 
 const PREFERENCES_EVENT = "tradehub:preferences-change";
@@ -46,6 +48,11 @@ function SettingsPage() {
       window.localStorage.removeItem("tradehub:preferences:v1");
     }
   }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.fontSize = preferences.largeFont ? "18px" : "";
+  }, [preferences.largeFont]);
 
   const save = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -147,6 +154,21 @@ function SettingsPage() {
                 />
               </label>
             ))}
+            <label className="flex cursor-pointer items-center justify-between gap-4 py-4">
+              <span>
+                <span className="block text-sm font-medium">Large Font (Accessibility)</span>
+                <span className="mt-1 block text-xs text-muted-foreground">
+                  Increase base font size for easier reading.
+                </span>
+              </span>
+              <input
+                aria-label="Large Font (Accessibility)"
+                checked={preferences.largeFont}
+                className="h-4 w-4 accent-primary"
+                type="checkbox"
+                onChange={(event) => update("largeFont", event.target.checked)}
+              />
+            </label>
           </div>
         </Card>
         <div className="flex flex-wrap items-center gap-3">

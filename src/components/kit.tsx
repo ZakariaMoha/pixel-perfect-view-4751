@@ -3,15 +3,14 @@ import { cn } from "@/lib/utils";
 
 export function Card({
   children,
-  className,
+  className = "",
   lift,
-}: {
-  children: ReactNode;
-  className?: string;
-  lift?: boolean;
-}) {
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { lift?: boolean }) {
   return (
-    <div className={cn("glass rounded-xl p-5", lift && "card-lift", className)}>{children}</div>
+    <div className={cn("glass-card", lift && "card-lift", className)} {...props}>
+      {children}
+    </div>
   );
 }
 
@@ -25,6 +24,88 @@ const tones: Record<string, string> = {
   muted: "bg-secondary text-muted-foreground border-border",
 };
 
+export function StatusPill({
+  status,
+}: {
+  status:
+    "delivered" | "shipped" | "in_transit" | "production" | "pending" | "failed" | "cancelled";
+}) {
+  const config = {
+    delivered: { color: "success", label: "Delivered" },
+    shipped: { color: "info", label: "Shipped" },
+    in_transit: { color: "info", label: "In Transit" },
+    production: { color: "warn", label: "Production" },
+    pending: { color: "muted", label: "Pending" },
+    failed: { color: "danger", label: "Failed" },
+    cancelled: { color: "muted", label: "Cancelled" },
+  }[status];
+
+  const pillClasses = {
+    success: "bg-status-success/10 text-status-success",
+    info: "bg-status-info/10 text-status-info",
+    warn: "bg-status-warn/10 text-status-warn",
+    danger: "bg-status-danger/10 text-status-danger",
+    muted: "bg-status-muted/10 text-status-muted",
+  } as const;
+
+  const dotClasses = {
+    success: "bg-status-success",
+    info: "bg-status-info",
+    warn: "bg-status-warn",
+    danger: "bg-status-danger",
+    muted: "bg-status-muted",
+  } as const;
+
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium",
+        pillClasses[config.color as keyof typeof pillClasses],
+      )}
+    >
+      <span
+        className={cn(
+          "h-1.5 w-1.5 rounded-full",
+          dotClasses[config.color as keyof typeof dotClasses],
+        )}
+      />
+      {config.label}
+    </span>
+  );
+}
+
+export function DataCard({
+  title,
+  subtitle,
+  status,
+  fields,
+  onClick,
+}: {
+  title: string;
+  subtitle?: string;
+  status?: Parameters<typeof StatusPill>[0]["status"];
+  fields: Array<{ label: string; value: string; mono?: boolean }>;
+  onClick?: () => void;
+}) {
+  return (
+    <div className="glass-card min-h-[88px] cursor-pointer" onClick={onClick}>
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <span className="font-mono text-sm text-fg">{title}</span>
+        {status ? <StatusPill status={status} /> : null}
+      </div>
+      {subtitle ? <p className="mb-3 text-sm text-fg-muted">{subtitle}</p> : null}
+      <div className="space-y-1.5">
+        {fields.map((field, index) => (
+          <div key={`${field.label}-${index}`} className="flex items-center justify-between gap-3">
+            <span className="text-xs text-fg-subtle">{field.label}</span>
+            <span className={cn("text-sm text-fg", field.mono && "font-mono")}>{field.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Badge({
   children,
   tone = "muted",
@@ -37,7 +118,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px] font-medium tracking-[0.02em]",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.08em]",
         tones[tone] ?? tones["muted"],
         className,
       )}
@@ -68,13 +149,15 @@ export function Stat({
     warning: "text-warning",
   };
   return (
-    <Card lift className="relative overflow-hidden">
-      <div className="flex items-start justify-between">
-        <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-subtle">{label}</p>
-        {icon ? <span className={ring[tone]}>{icon}</span> : null}
+    <Card className="relative overflow-hidden">
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-[11px] uppercase tracking-[0.12em] text-fg-subtle">{label}</p>
+        {icon ? (
+          <span className={cn("rounded-md bg-bg-elev-2 p-2", ring[tone])}>{icon}</span>
+        ) : null}
       </div>
-      <p className="mt-3 font-mono text-3xl font-semibold tracking-tight">{value}</p>
-      {sub ? <p className={cn("mt-1 text-sm", ring[tone])}>{sub}</p> : null}
+      <p className="mt-3 font-mono text-3xl font-semibold tracking-tight text-fg">{value}</p>
+      {sub ? <p className={cn("mt-1 text-xs text-fg-muted", ring[tone])}>{sub}</p> : null}
     </Card>
   );
 }
@@ -91,8 +174,8 @@ export function PageHeader({
   return (
     <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-        {subtitle ? <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p> : null}
+        <h1 className="text-3xl font-bold tracking-tight text-fg">{title}</h1>
+        {subtitle ? <p className="mt-1.5 text-sm text-fg-muted">{subtitle}</p> : null}
       </div>
       {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
     </div>
@@ -129,7 +212,7 @@ export function Button({
 
 export function Table({ head, children }: { head: string[]; children: ReactNode }) {
   return (
-    <div className="glass overflow-hidden rounded-xl">
+    <div className="overflow-hidden rounded-xl border border-border bg-bg-glass backdrop-blur-sm">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-sm">
           <thead>
@@ -137,7 +220,7 @@ export function Table({ head, children }: { head: string[]; children: ReactNode 
               {head.map((h) => (
                 <th
                   key={h}
-                  className="px-5 py-3.5 text-left text-[12px] font-semibold uppercase tracking-[0.08em] text-subtle"
+                  className="px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle"
                 >
                   {h}
                 </th>
@@ -153,16 +236,16 @@ export function Table({ head, children }: { head: string[]; children: ReactNode 
 
 export function Row({ children }: { children: ReactNode }) {
   return (
-    <tr className="border-b border-border/60 transition-colors last:border-0 hover:bg-secondary/60">
+    <tr className="h-10 border-b border-border/60 transition-colors last:border-0 hover:bg-bg-glass-hover">
       {children}
     </tr>
   );
 }
 
 export function Cell({ children, className }: { children: ReactNode; className?: string }) {
-  return <td className={cn("px-5 py-4 align-middle", className)}>{children}</td>;
+  return <td className={cn("px-5 py-3 align-middle", className)}>{children}</td>;
 }
 
 export function SectionTitle({ children }: { children: ReactNode }) {
-  return <h2 className="mb-4 text-lg font-semibold tracking-tight">{children}</h2>;
+  return <h2 className="mb-4 text-lg font-semibold tracking-tight text-fg">{children}</h2>;
 }

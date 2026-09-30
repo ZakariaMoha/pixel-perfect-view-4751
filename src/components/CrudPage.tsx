@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import { Check, Pencil, Plus, Search, Trash2, X } from "lucide-react";
-import { Button, Card, PageHeader, Table } from "@/components/kit";
+import { Button, Card, DataCard, PageHeader, Table } from "@/components/kit";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Dialog,
   DialogContent,
@@ -54,6 +55,7 @@ export function CrudPage<T extends { id: string }>({
   const [editing, setEditing] = useState<T | null>(null);
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const visibleRecords = records.filter((record) =>
     fields.some((field) =>
@@ -118,19 +120,75 @@ export function CrudPage<T extends { id: string }>({
         <Card className="text-sm text-muted-foreground">
           {records.length === 0 ? emptyMessage : "No matching records."}
         </Card>
+      ) : isMobile ? (
+        <div className="space-y-3">
+          {visibleRecords.map((record) => {
+            const firstColumnKey = columns[0]?.key;
+            const secondaryColumnKey = columns[1]?.key;
+            const mobileFields = columns.slice(0, 3).map((column) => ({
+              label: column.label,
+              value: String(record[column.key] ?? "—"),
+              mono: Boolean(column.mono),
+            }));
+
+            const rawStatus = "status" in record ? record.status : undefined;
+            const fallbackStatus =
+              typeof rawStatus === "string"
+                ? rawStatus.toLowerCase().replace(/[_\s]+/g, "_")
+                : undefined;
+
+            const statusMap: Record<
+              string,
+              | "delivered"
+              | "shipped"
+              | "in_transit"
+              | "production"
+              | "pending"
+              | "failed"
+              | "cancelled"
+            > = {
+              delivered: "delivered",
+              shipped: "shipped",
+              in_transit: "in_transit",
+              production: "production",
+              pending: "pending",
+              failed: "failed",
+              cancelled: "cancelled",
+            };
+
+            const cardStatus =
+              fallbackStatus && statusMap[fallbackStatus] ? statusMap[fallbackStatus] : undefined;
+
+            return (
+              <DataCard
+                key={record.id}
+                title={firstColumnKey ? String(record[firstColumnKey] ?? "—") : "—"}
+                {...(secondaryColumnKey
+                  ? { subtitle: String(record[secondaryColumnKey] ?? "") }
+                  : {})}
+                {...(cardStatus ? { status: cardStatus } : {})}
+                fields={mobileFields}
+                onClick={() => openEdit(record)}
+              />
+            );
+          })}
+        </div>
       ) : (
         <Table head={[...columns.map((column) => column.label), "Actions"]}>
           {visibleRecords.map((record) => (
-            <tr key={record.id} className="border-b border-border/60 last:border-0">
+            <tr
+              key={record.id}
+              className="h-10 border-b border-border/60 last:border-0 hover:bg-bg-glass-hover"
+            >
               {columns.map((column) => (
                 <td
                   key={column.key}
-                  className={`px-5 py-4 align-middle ${column.mono ? "font-mono" : ""}`}
+                  className={`px-5 py-3 align-middle ${column.mono ? "font-mono" : ""}`}
                 >
                   {column.render ? column.render(record) : String(record[column.key] ?? "—")}
                 </td>
               ))}
-              <td className="px-5 py-4 text-right">
+              <td className="px-5 py-3 text-right">
                 {confirmDelete === record.id ? (
                   <span className="inline-flex items-center gap-1">
                     <Button

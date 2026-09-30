@@ -56,8 +56,8 @@ const problems = [
   },
   {
     icon: WifiOff,
-    title: "Connections drop",
-    text: "Ports, warehouses and markets are exactly where the network fails.",
+    title: "Shared context breaks",
+    text: "Ports, warehouses and markets move fast, and messages get lost in the back-and-forth.",
   },
 ];
 
@@ -152,8 +152,8 @@ function Landing() {
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             One workspace for the China–Kenya import corridor: sourcing requests, agent quotes,
-            production, freight, customs, FX and invoicing — and it keeps working when the network
-            doesn't.
+            production, freight, customs, FX and invoicing — with milestones, pricing, and status in
+            one place.
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <Link to="/app">
@@ -231,7 +231,7 @@ function Landing() {
           How it works
         </p>
         <h2 className="mt-3 text-4xl font-semibold tracking-[-0.02em]">
-          Ten stages, one trail of record
+          A clear import workflow, one record of progress
         </h2>
         <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {steps.map((s) => (
