@@ -224,16 +224,16 @@ export function PaymentForm({ initial, onSave, onCancel, submitLabel = "Save pay
       counterpartyType: direction === "IN" ? "Client" : lines.length > 1 ? "Supplier" : lines[0]!.recipientType,
       amount: Math.round(primaryAmount * 100) / 100,
       currency: primaryCurrency,
-      lines: direction === "OUT" ? lines : undefined,
-      orderCode: orderCode || undefined,
+      ...(direction === "OUT" ? { lines } : {}),
+      ...(orderCode ? { orderCode } : {}),
       rateSource,
       method,
       reference,
       date,
-      expectedDate: status === "PENDING" ? expectedDate : undefined,
-      note: note || undefined,
+      ...(status === "PENDING" ? { expectedDate } : {}),
+      ...(note ? { note } : {}),
       images,
-      refundOf: initial?.refundOf,
+      ...(initial?.refundOf ? { refundOf: initial.refundOf } : {}),
     });
   };
 
