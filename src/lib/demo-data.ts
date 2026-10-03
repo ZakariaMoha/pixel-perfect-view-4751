@@ -88,6 +88,17 @@ export type Order = {
   route: string;
   weightKg: number;
   cbm: number;
+  carrier?: string;
+  trackingNumber?: string;
+  trackingUpdates?: ShipmentUpdate[];
+};
+
+export type ShipmentUpdate = {
+  id: string;
+  date: string;
+  status: OrderStatus;
+  note: string;
+  photos: string[];
 };
 
 export const orders: Order[] = [
@@ -107,6 +118,17 @@ export const orders: Order[] = [
     route: "Yiwu → Mombasa",
     weightKg: 1240,
     cbm: 8.4,
+    carrier: "Sino-Africa Freight",
+    trackingNumber: "SAFU2281",
+    trackingUpdates: [
+      {
+        id: "tracking-0847-1",
+        date: "2026-09-25",
+        status: "IN_TRANSIT",
+        note: "Container SAFU2281 departed Yiwu. Estimated Mombasa arrival: 08 Oct.",
+        photos: [],
+      },
+    ],
   },
   {
     id: "2",
@@ -652,6 +674,389 @@ export const invoices = [
     status: "Overdue",
     date: "02 Sep 2026",
   },
+];
+
+export type PaymentDirection = "IN" | "OUT";
+export type PaymentStatus = "received" | "sent" | "pending" | "failed" | "refunded";
+export type PaymentCurrency = "KES" | "CNY" | "USD";
+export type PaymentRecipientType = "Supplier" | "Agent" | "Logistics" | "Other";
+
+export type PaymentLine = {
+  recipientType: PaymentRecipientType;
+  recipient: string;
+  amount: number;
+  currency: PaymentCurrency;
+  note: string;
+};
+
+export type Payment = {
+  id: string;
+  code: string;
+  direction: PaymentDirection;
+  status: PaymentStatus;
+  counterparty: string;
+  type: string;
+  amount: number;
+  currency: PaymentCurrency;
+  usdAmount: number;
+  method: string;
+  reference: string;
+  date: string;
+  expectedDate?: string;
+  orderCode?: string;
+  images: string[];
+  imageTypes?: string[];
+  lines?: PaymentLine[];
+  note?: string;
+  relatedPaymentId?: string;
+  fxSource: "locked from order" | "live";
+  usdToCurrencyRate: number;
+  cnyPerUsd: number;
+};
+
+const makePayment = (
+  payment: Omit<
+    Payment,
+    "usdAmount" | "images" | "fxSource" | "usdToCurrencyRate" | "cnyPerUsd"
+  > & {
+    imageCount?: number;
+    fxSource?: Payment["fxSource"];
+  },
+): Payment => {
+  const usdAmount =
+    payment.currency === "USD"
+      ? payment.amount
+      : payment.currency === "KES"
+        ? payment.amount / FX.usdToKes
+        : payment.amount * FX.cnyToUsd;
+  const rates = { KES: FX.usdToKes, CNY: 1 / FX.cnyToUsd, USD: 1 };
+  return {
+    ...payment,
+    usdAmount,
+    images: Array.from({ length: payment.imageCount ?? 1 }, (_, index) => `proof-${index + 1}`),
+    imageTypes: Array.from({ length: payment.imageCount ?? 1 }, () => "Other"),
+    fxSource: payment.fxSource ?? (payment.orderCode ? "locked from order" : "live"),
+    usdToCurrencyRate: rates[payment.currency],
+    cnyPerUsd: 1 / FX.cnyToUsd,
+  };
+};
+
+export const payments: Payment[] = [
+  makePayment({
+    id: "pay-001",
+    code: "PM-2026-0021",
+    direction: "IN",
+    status: "received",
+    counterparty: "Amani Electronics",
+    type: "Deposit",
+    amount: 685000,
+    currency: "KES",
+    method: "M-Pesa",
+    reference: "RKT8M4Q2PL",
+    date: "2026-10-01",
+    orderCode: "KE-2026-0847",
+    imageCount: 2,
+  }),
+  makePayment({
+    id: "pay-002",
+    code: "PM-2026-0020",
+    direction: "IN",
+    status: "received",
+    counterparty: "Nairobi Home Depot",
+    type: "Deposit",
+    amount: 442500,
+    currency: "KES",
+    method: "M-Pesa",
+    reference: "RKU2N7D9AB",
+    date: "2026-09-29",
+    orderCode: "KE-2026-0846",
+  }),
+  makePayment({
+    id: "pay-003",
+    code: "PM-2026-0019",
+    direction: "IN",
+    status: "received",
+    counterparty: "Tuskys Auto Spares",
+    type: "Deposit",
+    amount: 318000,
+    currency: "KES",
+    method: "M-Pesa",
+    reference: "RKS6P1W3CD",
+    date: "2026-09-25",
+    orderCode: "KE-2026-0845",
+  }),
+  makePayment({
+    id: "pay-004",
+    code: "PM-2026-0018",
+    direction: "IN",
+    status: "received",
+    counterparty: "Zawadi Beauty",
+    type: "Deposit",
+    amount: 276000,
+    currency: "KES",
+    method: "M-Pesa",
+    reference: "RKR4T8Y5EF",
+    date: "2026-09-20",
+    orderCode: "KE-2026-0844",
+    imageCount: 2,
+  }),
+  makePayment({
+    id: "pay-005",
+    code: "PM-2026-0017",
+    direction: "IN",
+    status: "received",
+    counterparty: "Kilimani Fashion House",
+    type: "Deposit",
+    amount: 510000,
+    currency: "KES",
+    method: "M-Pesa",
+    reference: "RKP9H2J6GH",
+    date: "2026-09-16",
+    orderCode: "KE-2026-0843",
+  }),
+  makePayment({
+    id: "pay-006",
+    code: "PM-2026-0016",
+    direction: "IN",
+    status: "received",
+    counterparty: "Mombasa Hardware Ltd",
+    type: "Deposit",
+    amount: 364000,
+    currency: "KES",
+    method: "M-Pesa",
+    reference: "RKN3B7L1JK",
+    date: "2026-09-12",
+    orderCode: "KE-2026-0842",
+  }),
+  makePayment({
+    id: "pay-007",
+    code: "PM-2026-0015",
+    direction: "IN",
+    status: "received",
+    counterparty: "Amani Electronics",
+    type: "Balance",
+    amount: 420000,
+    currency: "KES",
+    method: "M-Pesa",
+    reference: "RKM5C8V2LM",
+    date: "2026-09-08",
+    orderCode: "KE-2026-0838",
+  }),
+  makePayment({
+    id: "pay-008",
+    code: "PM-2026-0014",
+    direction: "IN",
+    status: "received",
+    counterparty: "Nairobi Home Depot",
+    type: "Balance",
+    amount: 296000,
+    currency: "KES",
+    method: "Bank",
+    reference: "KCB-20260904-1982",
+    date: "2026-09-04",
+    orderCode: "KE-2026-0836",
+  }),
+  makePayment({
+    id: "pay-009",
+    code: "PM-2026-0013",
+    direction: "IN",
+    status: "received",
+    counterparty: "Zawadi Beauty",
+    type: "Balance",
+    amount: 188500,
+    currency: "KES",
+    method: "M-Pesa",
+    reference: "RKL7F3N8OP",
+    date: "2026-08-30",
+    orderCode: "KE-2026-0831",
+  }),
+  makePayment({
+    id: "pay-010",
+    code: "PM-2026-0012",
+    direction: "IN",
+    status: "refunded",
+    counterparty: "Tuskys Auto Spares",
+    type: "Refund",
+    amount: 42500,
+    currency: "KES",
+    method: "M-Pesa",
+    reference: "RKK2D9S4QR",
+    date: "2026-08-25",
+    relatedPaymentId: "pay-003",
+  }),
+  makePayment({
+    id: "pay-011",
+    code: "PM-2026-0011",
+    direction: "IN",
+    status: "pending",
+    counterparty: "Kilimani Fashion House",
+    type: "Balance",
+    amount: 245000,
+    currency: "KES",
+    method: "Bank",
+    reference: "Awaiting transfer",
+    date: "2026-10-02",
+    expectedDate: "2026-10-03",
+    orderCode: "KE-2026-0843",
+    imageCount: 0,
+  }),
+  makePayment({
+    id: "pay-012",
+    code: "PM-2026-0010",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "Shenzhen AudioTech",
+    type: "Supplier payment",
+    amount: 38000,
+    currency: "CNY",
+    method: "WeChat Pay",
+    reference: "2026092815482301",
+    date: "2026-09-28",
+    orderCode: "KE-2026-0847",
+  }),
+  makePayment({
+    id: "pay-013",
+    code: "PM-2026-0009",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "Guangdong KitchenPro",
+    type: "Supplier payment",
+    amount: 26500,
+    currency: "CNY",
+    method: "WeChat Pay",
+    reference: "2026092211057642",
+    date: "2026-09-22",
+    orderCode: "KE-2026-0846",
+  }),
+  makePayment({
+    id: "pay-014",
+    code: "PM-2026-0008",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "Hebei AutoLine",
+    type: "Supplier payment",
+    amount: 19400,
+    currency: "CNY",
+    method: "WeChat Pay",
+    reference: "2026091716324810",
+    date: "2026-09-17",
+    orderCode: "KE-2026-0845",
+  }),
+  makePayment({
+    id: "pay-015",
+    code: "PM-2026-0007",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "Xuchang HairCo",
+    type: "Supplier payment",
+    amount: 15200,
+    currency: "CNY",
+    method: "WeChat Pay",
+    reference: "2026091112479063",
+    date: "2026-09-11",
+    orderCode: "KE-2026-0844",
+  }),
+  makePayment({
+    id: "pay-016",
+    code: "PM-2026-0006",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "Shenzhen AudioTech + Li Wei",
+    type: "Supplier + agent",
+    amount: 22000,
+    currency: "CNY",
+    method: "WeChat Pay",
+    reference: "2026090614082571",
+    date: "2026-09-06",
+    orderCode: "KE-2026-0841",
+    imageCount: 2,
+    lines: [
+      {
+        recipientType: "Supplier",
+        recipient: "Shenzhen AudioTech",
+        amount: 20000,
+        currency: "CNY",
+        note: "Production milestone",
+      },
+      {
+        recipientType: "Agent",
+        recipient: "Li Wei",
+        amount: 2000,
+        currency: "CNY",
+        note: "Sourcing fee",
+      },
+    ],
+  }),
+  makePayment({
+    id: "pay-017",
+    code: "PM-2026-0005",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "East Africa Cargo",
+    type: "Logistics",
+    amount: 1840,
+    currency: "USD",
+    method: "Bank",
+    reference: "EQTY-20260829-4271",
+    date: "2026-08-29",
+    orderCode: "KE-2026-0842",
+  }),
+  makePayment({
+    id: "pay-018",
+    code: "PM-2026-0004",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "Mombasa Freight Link",
+    type: "Logistics",
+    amount: 1260,
+    currency: "USD",
+    method: "Bank",
+    reference: "KCB-20260821-5068",
+    date: "2026-08-21",
+    orderCode: "KE-2026-0839",
+  }),
+  makePayment({
+    id: "pay-019",
+    code: "PM-2026-0003",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "Yiwu Central Warehouse",
+    type: "Warehouse fee",
+    amount: 3500,
+    currency: "CNY",
+    method: "WeChat Pay",
+    reference: "2026081817403652",
+    date: "2026-08-18",
+  }),
+  makePayment({
+    id: "pay-020",
+    code: "PM-2026-0002",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "Li Wei",
+    type: "Agent commission payout",
+    amount: 3500,
+    currency: "CNY",
+    method: "WeChat Pay",
+    reference: "2026081211297438",
+    date: "2026-08-12",
+    imageCount: 2,
+    note: "Bulk payout covering 18 orders",
+  }),
+  makePayment({
+    id: "pay-021",
+    code: "PM-2026-0001",
+    direction: "OUT",
+    status: "sent",
+    counterparty: "Wu Jian",
+    type: "Agent commission payout",
+    amount: 2800,
+    currency: "CNY",
+    method: "WeChat Pay",
+    reference: "2026080415032861",
+    date: "2026-08-04",
+    note: "Bulk payout covering 12 orders",
+  }),
 ];
 
 export const insights = [

@@ -19,11 +19,19 @@ import { Route as AppInboxRouteImport } from './routes/app.inbox'
 import { Route as AppInvoicesRouteImport } from './routes/app.invoices'
 import { Route as AppLogisticsRouteImport } from './routes/app.logistics'
 import { Route as AppMarketRouteImport } from './routes/app.market'
+import { Route as AppPaymentsRouteImport } from './routes/app.payments'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppSuppliersRouteImport } from './routes/app.suppliers'
+import { Route as PortalTokenRouteImport } from './routes/portal.$token'
 import { Route as AppOrdersIndexRouteImport } from './routes/app.orders.index'
 import { Route as AppOrdersIdRouteImport } from './routes/app.orders.$id'
+import { Route as AppPaymentsIndexRouteImport } from './routes/app.payments.index'
+import { Route as AppPaymentsIdRouteImport } from './routes/app.payments.$id'
+import { Route as AppPaymentsCommissionsRouteImport } from './routes/app.payments.commissions'
+import { Route as AppPaymentsLedgerRouteImport } from './routes/app.payments.ledger'
+import { Route as AppPaymentsNewRouteImport } from './routes/app.payments.new'
+import { Route as AppPaymentsRecurringRouteImport } from './routes/app.payments.recurring'
 import { Route as AppSourcingIndexRouteImport } from './routes/app.sourcing.index'
 import { Route as AppSourcingIdRouteImport } from './routes/app.sourcing.$id'
 
@@ -77,6 +85,11 @@ const AppMarketRoute = AppMarketRouteImport.update({
   path: '/market',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -92,6 +105,11 @@ const AppSuppliersRoute = AppSuppliersRouteImport.update({
   path: '/suppliers',
   getParentRoute: () => AppRoute,
 } as any)
+const PortalTokenRoute = PortalTokenRouteImport.update({
+  id: '/portal/$token',
+  path: '/portal/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppOrdersIndexRoute = AppOrdersIndexRouteImport.update({
   id: '/orders/',
   path: '/orders/',
@@ -101,6 +119,36 @@ const AppOrdersIdRoute = AppOrdersIdRouteImport.update({
   id: '/orders/$id',
   path: '/orders/$id',
   getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsIndexRoute = AppPaymentsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppPaymentsRoute,
+} as any)
+const AppPaymentsIdRoute = AppPaymentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppPaymentsRoute,
+} as any)
+const AppPaymentsCommissionsRoute = AppPaymentsCommissionsRouteImport.update({
+  id: '/commissions',
+  path: '/commissions',
+  getParentRoute: () => AppPaymentsRoute,
+} as any)
+const AppPaymentsLedgerRoute = AppPaymentsLedgerRouteImport.update({
+  id: '/ledger',
+  path: '/ledger',
+  getParentRoute: () => AppPaymentsRoute,
+} as any)
+const AppPaymentsNewRoute = AppPaymentsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppPaymentsRoute,
+} as any)
+const AppPaymentsRecurringRoute = AppPaymentsRecurringRouteImport.update({
+  id: '/recurring',
+  path: '/recurring',
+  getParentRoute: () => AppPaymentsRoute,
 } as any)
 const AppSourcingIndexRoute = AppSourcingIndexRouteImport.update({
   id: '/sourcing/',
@@ -123,13 +171,21 @@ export interface FileRoutesByFullPath {
   '/app/invoices': typeof AppInvoicesRoute
   '/app/logistics': typeof AppLogisticsRoute
   '/app/market': typeof AppMarketRoute
+  '/app/payments': typeof AppPaymentsRouteWithChildren
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/suppliers': typeof AppSuppliersRoute
+  '/portal/$token': typeof PortalTokenRoute
   '/app/': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
+  '/app/payments/$id': typeof AppPaymentsIdRoute
+  '/app/payments/commissions': typeof AppPaymentsCommissionsRoute
+  '/app/payments/ledger': typeof AppPaymentsLedgerRoute
+  '/app/payments/new': typeof AppPaymentsNewRoute
+  '/app/payments/recurring': typeof AppPaymentsRecurringRoute
   '/app/sourcing/$id': typeof AppSourcingIdRoute
   '/app/orders/': typeof AppOrdersIndexRoute
+  '/app/payments/': typeof AppPaymentsIndexRoute
   '/app/sourcing/': typeof AppSourcingIndexRoute
 }
 export interface FileRoutesByTo {
@@ -144,10 +200,17 @@ export interface FileRoutesByTo {
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/suppliers': typeof AppSuppliersRoute
+  '/portal/$token': typeof PortalTokenRoute
   '/app': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
+  '/app/payments/$id': typeof AppPaymentsIdRoute
+  '/app/payments/commissions': typeof AppPaymentsCommissionsRoute
+  '/app/payments/ledger': typeof AppPaymentsLedgerRoute
+  '/app/payments/new': typeof AppPaymentsNewRoute
+  '/app/payments/recurring': typeof AppPaymentsRecurringRoute
   '/app/sourcing/$id': typeof AppSourcingIdRoute
   '/app/orders': typeof AppOrdersIndexRoute
+  '/app/payments': typeof AppPaymentsIndexRoute
   '/app/sourcing': typeof AppSourcingIndexRoute
 }
 export interface FileRoutesById {
@@ -161,13 +224,21 @@ export interface FileRoutesById {
   '/app/invoices': typeof AppInvoicesRoute
   '/app/logistics': typeof AppLogisticsRoute
   '/app/market': typeof AppMarketRoute
+  '/app/payments': typeof AppPaymentsRouteWithChildren
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/suppliers': typeof AppSuppliersRoute
+  '/portal/$token': typeof PortalTokenRoute
   '/app/': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
+  '/app/payments/$id': typeof AppPaymentsIdRoute
+  '/app/payments/commissions': typeof AppPaymentsCommissionsRoute
+  '/app/payments/ledger': typeof AppPaymentsLedgerRoute
+  '/app/payments/new': typeof AppPaymentsNewRoute
+  '/app/payments/recurring': typeof AppPaymentsRecurringRoute
   '/app/sourcing/$id': typeof AppSourcingIdRoute
   '/app/orders/': typeof AppOrdersIndexRoute
+  '/app/payments/': typeof AppPaymentsIndexRoute
   '/app/sourcing/': typeof AppSourcingIndexRoute
 }
 export interface FileRouteTypes {
@@ -182,13 +253,21 @@ export interface FileRouteTypes {
     | '/app/invoices'
     | '/app/logistics'
     | '/app/market'
+    | '/app/payments'
     | '/app/reports'
     | '/app/settings'
     | '/app/suppliers'
+    | '/portal/$token'
     | '/app/'
     | '/app/orders/$id'
+    | '/app/payments/$id'
+    | '/app/payments/commissions'
+    | '/app/payments/ledger'
+    | '/app/payments/new'
+    | '/app/payments/recurring'
     | '/app/sourcing/$id'
     | '/app/orders/'
+    | '/app/payments/'
     | '/app/sourcing/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -203,10 +282,17 @@ export interface FileRouteTypes {
     | '/app/reports'
     | '/app/settings'
     | '/app/suppliers'
+    | '/portal/$token'
     | '/app'
     | '/app/orders/$id'
+    | '/app/payments/$id'
+    | '/app/payments/commissions'
+    | '/app/payments/ledger'
+    | '/app/payments/new'
+    | '/app/payments/recurring'
     | '/app/sourcing/$id'
     | '/app/orders'
+    | '/app/payments'
     | '/app/sourcing'
   id:
     | '__root__'
@@ -219,19 +305,28 @@ export interface FileRouteTypes {
     | '/app/invoices'
     | '/app/logistics'
     | '/app/market'
+    | '/app/payments'
     | '/app/reports'
     | '/app/settings'
     | '/app/suppliers'
+    | '/portal/$token'
     | '/app/'
     | '/app/orders/$id'
+    | '/app/payments/$id'
+    | '/app/payments/commissions'
+    | '/app/payments/ledger'
+    | '/app/payments/new'
+    | '/app/payments/recurring'
     | '/app/sourcing/$id'
     | '/app/orders/'
+    | '/app/payments/'
     | '/app/sourcing/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  PortalTokenRoute: typeof PortalTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -306,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMarketRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/payments': {
+      id: '/app/payments'
+      path: '/payments'
+      fullPath: '/app/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/reports': {
       id: '/app/reports'
       path: '/reports'
@@ -327,6 +429,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSuppliersRouteImport
       parentRoute: typeof AppRoute
     }
+    '/portal/$token': {
+      id: '/portal/$token'
+      path: '/portal/$token'
+      fullPath: '/portal/$token'
+      preLoaderRoute: typeof PortalTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/orders/': {
       id: '/app/orders/'
       path: '/orders'
@@ -340,6 +449,48 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/orders/$id'
       preLoaderRoute: typeof AppOrdersIdRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/app/payments/': {
+      id: '/app/payments/'
+      path: '/'
+      fullPath: '/app/payments/'
+      preLoaderRoute: typeof AppPaymentsIndexRouteImport
+      parentRoute: typeof AppPaymentsRoute
+    }
+    '/app/payments/$id': {
+      id: '/app/payments/$id'
+      path: '/$id'
+      fullPath: '/app/payments/$id'
+      preLoaderRoute: typeof AppPaymentsIdRouteImport
+      parentRoute: typeof AppPaymentsRoute
+    }
+    '/app/payments/commissions': {
+      id: '/app/payments/commissions'
+      path: '/commissions'
+      fullPath: '/app/payments/commissions'
+      preLoaderRoute: typeof AppPaymentsCommissionsRouteImport
+      parentRoute: typeof AppPaymentsRoute
+    }
+    '/app/payments/ledger': {
+      id: '/app/payments/ledger'
+      path: '/ledger'
+      fullPath: '/app/payments/ledger'
+      preLoaderRoute: typeof AppPaymentsLedgerRouteImport
+      parentRoute: typeof AppPaymentsRoute
+    }
+    '/app/payments/new': {
+      id: '/app/payments/new'
+      path: '/new'
+      fullPath: '/app/payments/new'
+      preLoaderRoute: typeof AppPaymentsNewRouteImport
+      parentRoute: typeof AppPaymentsRoute
+    }
+    '/app/payments/recurring': {
+      id: '/app/payments/recurring'
+      path: '/recurring'
+      fullPath: '/app/payments/recurring'
+      preLoaderRoute: typeof AppPaymentsRecurringRouteImport
+      parentRoute: typeof AppPaymentsRoute
     }
     '/app/sourcing/': {
       id: '/app/sourcing/'
@@ -358,6 +509,28 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppPaymentsRouteChildren {
+  AppPaymentsIdRoute: typeof AppPaymentsIdRoute
+  AppPaymentsCommissionsRoute: typeof AppPaymentsCommissionsRoute
+  AppPaymentsLedgerRoute: typeof AppPaymentsLedgerRoute
+  AppPaymentsNewRoute: typeof AppPaymentsNewRoute
+  AppPaymentsRecurringRoute: typeof AppPaymentsRecurringRoute
+  AppPaymentsIndexRoute: typeof AppPaymentsIndexRoute
+}
+
+const AppPaymentsRouteChildren: AppPaymentsRouteChildren = {
+  AppPaymentsIdRoute: AppPaymentsIdRoute,
+  AppPaymentsCommissionsRoute: AppPaymentsCommissionsRoute,
+  AppPaymentsLedgerRoute: AppPaymentsLedgerRoute,
+  AppPaymentsNewRoute: AppPaymentsNewRoute,
+  AppPaymentsRecurringRoute: AppPaymentsRecurringRoute,
+  AppPaymentsIndexRoute: AppPaymentsIndexRoute,
+}
+
+const AppPaymentsRouteWithChildren = AppPaymentsRoute._addFileChildren(
+  AppPaymentsRouteChildren,
+)
+
 interface AppRouteChildren {
   AppAgentsRoute: typeof AppAgentsRoute
   AppClientsRoute: typeof AppClientsRoute
@@ -366,6 +539,7 @@ interface AppRouteChildren {
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppLogisticsRoute: typeof AppLogisticsRoute
   AppMarketRoute: typeof AppMarketRoute
+  AppPaymentsRoute: typeof AppPaymentsRouteWithChildren
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppSuppliersRoute: typeof AppSuppliersRoute
@@ -384,6 +558,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppInvoicesRoute: AppInvoicesRoute,
   AppLogisticsRoute: AppLogisticsRoute,
   AppMarketRoute: AppMarketRoute,
+  AppPaymentsRoute: AppPaymentsRouteWithChildren,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppSuppliersRoute: AppSuppliersRoute,
@@ -399,6 +574,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  PortalTokenRoute: PortalTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

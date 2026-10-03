@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none">
+  <defs>
+    <linearGradient id="steel" x1="26" y1="22" x2="132" y2="140" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5F7F8"/>
+      <stop offset=".25" stop-color="#89939C"/>
+      <stop offset=".48" stop-color="#26323D"/>
+      <stop offset=".72" stop-color="#C7CDD1"/>
+      <stop offset="1" stop-color="#56616B"/>
+    </linearGradient>
+    <linearGradient id="copper" x1="44" y1="112" x2="128" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A85B36"/>
+      <stop offset=".5" stop-color="#F4D6A0"/>
+      <stop offset="1" stop-color="#B47748"/>
+    </linearGradient>
+    <filter id="shadow" x="4" y="7" width="152" height="148" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+  <ellipse cx="80" cy="80" rx="67" ry="62" fill="#03070B" opacity=".46" filter="url(#shadow)"/>
+  <path d="M80 18c-34 0-61 27-61 62s27 62 61 62 61-27 61-62-27-62-61-62Z" stroke="url(#steel)" stroke-width="10"/>
+  <path d="M80 19c-19 17-29 37-29 61s10 45 29 61m0-122c19 17 29 37 29 61s-10 45-29 61M22 81h116" stroke="url(#steel)" stroke-width="3" opacity=".76"/>
+  <path d="M29 52c14 10 32 15 51 15s37-5 51-15M29 108c14-10 32-15 51-15s37 5 51 15" stroke="url(#steel)" stroke-width="3" opacity=".64"/>
+  <path d="M22 88c25 0 27-41 57-41s32 41 59 41" stroke="url(#copper)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M29 104c21 0 28-23 51-23 21 0 27 17 44 18" stroke="url(#copper)" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+  <path d="m116 83 20-4-5 20" stroke="url(#copper)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="22" cy="88" r="5" fill="#E8B47D"/>
+</svg>

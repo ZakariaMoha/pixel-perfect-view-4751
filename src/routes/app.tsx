@@ -5,11 +5,11 @@ import {
   Bell,
   Boxes,
   Building2,
+  CircleDollarSign,
   DollarSign,
   Factory,
   FileText,
   Gauge,
-  Globe2,
   Home,
   Inbox,
   Menu,
@@ -19,6 +19,7 @@ import {
   PackageSearch,
   Search,
   Settings,
+  TrendingUp,
   Truck,
   Users,
 } from "lucide-react";
@@ -31,6 +32,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/kit";
+import { BrandLogo } from "@/components/brand";
 import {
   Sheet,
   SheetContent,
@@ -53,7 +55,15 @@ const navigationSections = [
       { to: "/app", label: "Dashboard", icon: Gauge, exact: true },
       { to: "/app/sourcing", label: "Sourcing", icon: Search },
       { to: "/app/orders", label: "Orders", icon: Package },
+      { to: "/app/market", label: "Market analysis", icon: TrendingUp },
       { to: "/app/inbox", label: "Inbox", icon: MessageSquare },
+    ],
+  },
+  {
+    title: "PARTNERS",
+    items: [
+      { to: "/app/logistics", label: "Logistics", icon: Truck },
+      { to: "/app/suppliers", label: "Suppliers", icon: Factory },
     ],
   },
   {
@@ -61,6 +71,7 @@ const navigationSections = [
     items: [
       { to: "/app/reports", label: "Reports", icon: BarChart },
       { to: "/app/fx", label: "FX", icon: DollarSign },
+      { to: "/app/payments", label: "Payments", icon: CircleDollarSign },
       { to: "/app/invoices", label: "Invoices", icon: FileText },
     ],
   },
@@ -75,8 +86,10 @@ const moreNav = [
   { to: "/app/agents", label: "Agents", icon: Building2 },
   { to: "/app/suppliers", label: "Suppliers", icon: Factory },
   { to: "/app/logistics", label: "Logistics", icon: Truck },
+  { to: "/app/market", label: "Market analysis", icon: TrendingUp },
   { to: "/app/reports", label: "Reports", icon: BarChart },
   { to: "/app/fx", label: "FX", icon: DollarSign },
+  { to: "/app/payments", label: "Payments", icon: CircleDollarSign },
   { to: "/app/invoices", label: "Invoices", icon: FileText },
   { to: "/app/settings", label: "Settings", icon: Settings },
 ] as const;
@@ -85,7 +98,7 @@ const mobilePrimaryNav = [
   { to: "/app", label: "Home", icon: Home, exact: true },
   { to: "/app/sourcing", label: "Sourcing", icon: Search },
   { to: "/app/orders", label: "Orders", icon: Package },
-  { to: "/app/inbox", label: "Inbox", icon: MessageSquare },
+  { to: "/app/logistics", label: "Logistics", icon: Truck },
 ] as const;
 
 function AdminLayout() {
@@ -124,15 +137,12 @@ function AdminLayout() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen w-full overflow-x-clip bg-bg">
       <div className="pointer-events-none fixed inset-0 grid-overlay opacity-40" />
-      <div className="relative flex">
+      <div className="relative flex min-w-0 w-full">
         <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-border bg-bg-glass/70 md:flex">
           <Link to="/" className="flex items-center gap-2.5 px-5 py-5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Globe2 size={18} />
-            </span>
-            <span className="text-lg font-bold tracking-tight text-fg">TradeHub</span>
+            <BrandLogo />
           </Link>
           <nav className="flex-1 space-y-4 overflow-y-auto px-3 pb-6">
             {navigationSections.map((section) => (
@@ -170,14 +180,17 @@ function AdminLayout() {
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-bg/70 px-4 py-3.5 backdrop-blur-xl md:px-6">
             {isMobile ? (
-              <button
-                aria-label="Open navigation"
-                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-fg-muted hover:bg-bg-glass-hover hover:text-fg"
-                onClick={() => setMobileMenuOpen(true)}
-                type="button"
-              >
-                <Menu size={20} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  aria-label="Open navigation"
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-fg-muted hover:bg-bg-glass-hover hover:text-fg"
+                  onClick={() => setMobileMenuOpen(true)}
+                  type="button"
+                >
+                  <Menu size={20} />
+                </button>
+                <BrandLogo size={24} />
+              </div>
             ) : (
               <div className="h-11 w-11" aria-hidden="true" />
             )}
@@ -213,6 +226,10 @@ function AdminLayout() {
           <main className="min-w-0 flex-1 px-4 py-6 pb-20 md:px-6 md:py-8 md:pb-8">
             <Outlet />
           </main>
+          <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-4 text-xs text-fg-subtle md:px-6">
+            <BrandLogo size={28} />
+            <span>China to Kenya trade operations</span>
+          </footer>
         </div>
       </div>
 
@@ -222,7 +239,7 @@ function AdminLayout() {
             <SheetTitle>TradeHub navigation</SheetTitle>
             <SheetDescription>Move through the workspace.</SheetDescription>
           </SheetHeader>
-          <nav className="mt-6 space-y-4">
+          <nav className="mt-6 max-h-[calc(100dvh-9rem)] space-y-4 overflow-y-auto pb-4">
             {navigationSections.map((section) => (
               <div key={section.title}>
                 <p className="px-3 py-2 text-[11px] uppercase tracking-[0.12em] text-fg-faint">
@@ -256,7 +273,7 @@ function AdminLayout() {
             <SheetTitle>More tools</SheetTitle>
             <SheetDescription>Client, agent, and operational views.</SheetDescription>
           </SheetHeader>
-          <nav className="mt-6 space-y-1">
+          <nav className="mt-6 max-h-[calc(100dvh-9rem)] space-y-1 overflow-y-auto pb-4">
             {moreNav.map((item) => (
               <Link
                 key={item.to}

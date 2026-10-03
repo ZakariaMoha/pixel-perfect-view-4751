@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" fill="none">
+  <defs>
+    <linearGradient id="silver" x1="192" y1="26" x2="483" y2="94" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFB"/>
+      <stop offset=".35" stop-color="#9CA7AF"/>
+      <stop offset=".62" stop-color="#E5E9EB"/>
+      <stop offset="1" stop-color="#88939B"/>
+    </linearGradient>
+    <linearGradient id="steel" x1="26" y1="22" x2="132" y2="140" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5F7F8"/>
+      <stop offset=".25" stop-color="#89939C"/>
+      <stop offset=".48" stop-color="#26323D"/>
+      <stop offset=".72" stop-color="#C7CDD1"/>
+      <stop offset="1" stop-color="#56616B"/>
+    </linearGradient>
+    <linearGradient id="copper" x1="44" y1="112" x2="128" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A85B36"/>
+      <stop offset=".5" stop-color="#F4D6A0"/>
+      <stop offset="1" stop-color="#B47748"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(4 0) scale(.92)">
+    <path d="M80 18c-34 0-61 27-61 62s27 62 61 62 61-27 61-62-27-62-61-62Z" stroke="url(#steel)" stroke-width="10"/>
+    <path d="M80 19c-19 17-29 37-29 61s10 45 29 61m0-122c19 17 29 37 29 61s-10 45-29 61M22 81h116" stroke="url(#steel)" stroke-width="3" opacity=".76"/>
+    <path d="M29 52c14 10 32 15 51 15s37-5 51-15M29 108c14-10 32-15 51-15s37 5 51 15" stroke="url(#steel)" stroke-width="3" opacity=".64"/>
+    <path d="M22 88c25 0 27-41 57-41s32 41 59 41" stroke="url(#copper)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M29 104c21 0 28-23 51-23 21 0 27 17 44 18m-8-16 20-4-5 20" stroke="url(#copper)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="154" y="83" fill="url(#silver)" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" letter-spacing="1">TradeHub</text>
+  <text x="158" y="111" fill="#C7CDD1" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="2.4">GLOBAL SOURCING &amp; LOGISTICS</text>
+  <path d="M158 124h310" stroke="url(#copper)" stroke-width="2"/>
+</svg>

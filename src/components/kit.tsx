@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Card({
@@ -88,10 +89,25 @@ export function DataCard({
   onClick?: () => void;
 }) {
   return (
-    <div className="glass-card min-h-[88px] cursor-pointer" onClick={onClick}>
+    <div
+      aria-label={onClick ? `Edit ${title}` : undefined}
+      className="glass-card min-h-[88px] cursor-pointer"
+      onClick={onClick}
+      onKeyDown={(event) => {
+        if (onClick && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          onClick();
+        }
+      }}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+    >
       <div className="mb-3 flex items-start justify-between gap-3">
         <span className="font-mono text-sm text-fg">{title}</span>
-        {status ? <StatusPill status={status} /> : null}
+        <div className="flex shrink-0 items-center gap-2">
+          {status ? <StatusPill status={status} /> : null}
+          {onClick ? <Pencil aria-hidden="true" className="text-fg-subtle" size={14} /> : null}
+        </div>
       </div>
       {subtitle ? <p className="mb-3 text-sm text-fg-muted">{subtitle}</p> : null}
       <div className="space-y-1.5">

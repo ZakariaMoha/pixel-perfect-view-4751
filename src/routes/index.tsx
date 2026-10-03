@@ -5,7 +5,6 @@ import {
   Clock,
   Eye,
   Gauge,
-  Globe2,
   MessageSquare,
   Receipt,
   ShieldCheck,
@@ -14,6 +13,7 @@ import {
   WifiOff,
 } from "lucide-react";
 import { Badge, Button, Card } from "@/components/kit";
+import { BrandLogo } from "@/components/brand";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -111,10 +111,7 @@ function Landing() {
       <header className="sticky top-0 z-40 glass-strong">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Globe2 size={18} />
-            </span>
-            <span className="text-lg font-bold tracking-tight">TradeHub</span>
+            <BrandLogo />
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
             <a href="#problem" className="transition-colors hover:text-foreground">
@@ -280,7 +277,7 @@ function Landing() {
 
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-8 text-sm text-subtle">
-          <span>TradeHub · China ↔ Kenya trade management</span>
+          <BrandLogo size={30} />
           <span>Nairobi · Shenzhen · Mombasa</span>
         </div>
       </footer>
