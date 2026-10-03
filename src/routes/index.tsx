@@ -143,7 +143,7 @@ function Landing() {
             <ShieldCheck size={13} /> Trusted by 120+ Kenyan importers
           </Badge>
           <h1 className="mt-7 text-5xl font-bold leading-[1.05] tracking-[-0.04em] md:text-7xl">
-            From 1688 to Nairobi.
+            From China to Nairobi.
             <br />
             <span className="gradient-text">Tracked. Trusted. Delivered.</span>
           </h1>

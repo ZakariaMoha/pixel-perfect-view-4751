@@ -82,6 +82,7 @@ const navigationSections = [
 ] as const;
 
 const moreNav = [
+  { to: "/app/inbox", label: "Inbox", icon: MessageSquare },
   { to: "/app/clients", label: "Clients", icon: Users },
   { to: "/app/agents", label: "Agents", icon: Building2 },
   { to: "/app/suppliers", label: "Suppliers", icon: Factory },
@@ -99,6 +100,7 @@ const mobilePrimaryNav = [
   { to: "/app/sourcing", label: "Sourcing", icon: Search },
   { to: "/app/orders", label: "Orders", icon: Package },
   { to: "/app/logistics", label: "Logistics", icon: Truck },
+  { to: "/app/suppliers", label: "Suppliers", icon: Factory },
 ] as const;
 
 function AdminLayout() {
@@ -291,7 +293,7 @@ function AdminLayout() {
       </Sheet>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border px-2 pb-[env(safe-area-inset-bottom)] md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-border px-1 pb-[env(safe-area-inset-bottom)] md:hidden"
         style={{
           height: "56px",
           background: "rgba(15, 23, 42, 0.95)",

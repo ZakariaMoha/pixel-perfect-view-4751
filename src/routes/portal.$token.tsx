@@ -1,16 +1,26 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, Circle } from "lucide-react";
 import { Card } from "@/components/kit";
 import { BrandLogo } from "@/components/brand";
 import { PaymentStatusPill } from "@/components/payments/shared";
-import { clients, payments } from "@/lib/demo-data";
+import { clients, orders, payments, statusMeta, type Order } from "@/lib/demo-data";
+import {
+  formatTrackingDate,
+  latestShipmentUpdate,
+  latestShipmentUpdateForStatus,
+  shipmentProgress,
+  shipmentStages,
+} from "@/lib/shipment-tracking";
+import { usePersistentList } from "@/lib/use-persistent-list";
 
 export const Route = createFileRoute("/portal/$token")({ component: ClientPortalPage });
 
 function ClientPortalPage() {
   const { token } = Route.useParams();
-  const [tab, setTab] = useState<"Overview" | "Orders" | "Payments">("Payments");
+  const [tab, setTab] = useState<"Overview" | "Orders" | "Payments">("Orders");
+  const [expandedOrderCode, setExpandedOrderCode] = useState<string | null>(null);
+  const orderCollection = usePersistentList<Order>("orders", orders);
   const client =
     clients.find(
       (item) => item.id === token || item.name.toLowerCase().replaceAll(" ", "-") === token,
@@ -18,13 +28,7 @@ function ClientPortalPage() {
   const visiblePayments = payments.filter(
     (payment) => payment.direction === "IN" && payment.counterparty === client?.name,
   );
-  const linkedOrders = [
-    ...new Set(
-      visiblePayments
-        .map((payment) => payment.orderCode)
-        .filter((code): code is string => Boolean(code)),
-    ),
-  ];
+  const linkedOrders = orderCollection.records.filter((order) => order.client === client?.name);
 
   if (!client)
     return (
@@ -106,6 +110,7 @@ function ClientPortalPage() {
                       className="mt-4 inline-flex min-h-11 items-center gap-1 text-sm text-accent"
                       onClick={() => {
                         setTab("Orders");
+                        setExpandedOrderCode(payment.orderCode ?? null);
                         window.history.replaceState(
                           {},
                           "",
@@ -124,30 +129,143 @@ function ClientPortalPage() {
             </div>
           </>
         ) : tab === "Orders" ? (
-          <Card>
-            <h2 className="text-lg font-semibold">Your orders</h2>
-            <div className="mt-4 divide-y divide-border">
-              {linkedOrders.map((code) => (
-                <div
-                  id={`order-${code}`}
-                  key={code}
-                  className="flex min-h-14 items-center justify-between gap-3 py-3"
-                >
-                  <span className="font-mono text-sm">{code}</span>
-                  <button
-                    type="button"
-                    onClick={() => setTab("Payments")}
-                    className="text-sm text-accent"
-                  >
-                    View payments
-                  </button>
-                </div>
-              ))}
-              {linkedOrders.length === 0 ? (
-                <p className="py-4 text-sm text-fg-subtle">No linked orders.</p>
-              ) : null}
+          <section aria-label="Tracked orders" className="space-y-3">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Your shipments</h2>
+              <p className="mt-1 text-sm text-fg-subtle">Current progress and delivery updates</p>
             </div>
-          </Card>
+            {linkedOrders.map((order) => {
+              const expanded = expandedOrderCode === order.code;
+              const currentStage = shipmentProgress(order.status);
+              const latest = latestShipmentUpdate(order.trackingUpdates);
+              return (
+                <Card key={order.id} className="min-w-0 !p-4">
+                  <button
+                    aria-expanded={expanded}
+                    className="flex w-full min-w-0 items-start justify-between gap-3 text-left"
+                    onClick={() => setExpandedOrderCode(expanded ? null : order.code)}
+                    type="button"
+                  >
+                    <span className="min-w-0">
+                      <span className="block break-all font-mono text-sm text-accent">
+                        {order.code}
+                      </span>
+                      <span className="mt-1 block break-words text-sm font-medium">
+                        {order.product}
+                      </span>
+                    </span>
+                    <span className="shrink-0 text-right">
+                      <span className="block text-xs text-fg-muted">
+                        {statusMeta[order.status]?.label ?? order.status}
+                      </span>
+                      <span className="mt-1 block text-xs text-fg-subtle">ETA {order.eta}</span>
+                    </span>
+                  </button>
+                  <div
+                    aria-label={`Shipment progress: ${statusMeta[order.status]?.label ?? order.status}`}
+                    className="mt-4 grid grid-cols-8 gap-1"
+                    role="img"
+                  >
+                    {shipmentStages.map((stage, index) => (
+                      <span
+                        key={stage.status}
+                        className={`h-1.5 min-w-0 rounded-full ${index <= currentStage ? "bg-accent" : "bg-bg-elev-2"}`}
+                        title={stage.label}
+                      />
+                    ))}
+                  </div>
+                  {latest ? (
+                    <div className="mt-4 border-t border-border pt-3">
+                      <p className="text-xs text-fg-subtle">
+                        Latest update · {formatTrackingDate(latest.date)}
+                      </p>
+                      <p className="mt-1 break-words text-sm text-fg-muted">{latest.note}</p>
+                      {latest.photos.length ? (
+                        <div className="mt-3 flex max-w-full gap-2 overflow-x-auto pb-1">
+                          {latest.photos.map((photo, index) => (
+                            <a
+                              href={photo}
+                              key={`${latest.id}-${index}`}
+                              rel="noreferrer"
+                              target="_blank"
+                            >
+                              <img
+                                alt={`${order.code} shipment photo ${index + 1}`}
+                                className="h-16 w-16 rounded-md border border-border object-cover"
+                                loading="lazy"
+                                src={photo}
+                              />
+                            </a>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <p className="mt-4 border-t border-border pt-3 text-sm text-fg-subtle">
+                      Shipment updates will appear here.
+                    </p>
+                  )}
+                  {order.carrier || order.trackingNumber ? (
+                    <div className="mt-3 flex min-w-0 flex-wrap gap-x-5 gap-y-2 text-xs text-fg-subtle">
+                      {order.carrier ? (
+                        <span>
+                          Carrier: <span className="text-fg-muted">{order.carrier}</span>
+                        </span>
+                      ) : null}
+                      {order.trackingNumber ? (
+                        <span>
+                          Tracking:{" "}
+                          <span className="break-all font-mono text-fg-muted">
+                            {order.trackingNumber}
+                          </span>
+                        </span>
+                      ) : null}
+                    </div>
+                  ) : null}
+                  {expanded ? (
+                    <ol className="mt-4 space-y-3 border-t border-border pt-4">
+                      {shipmentStages.map((stage, index) => {
+                        const stageUpdate = latestShipmentUpdateForStatus(
+                          order.trackingUpdates,
+                          stage.status,
+                        );
+                        return (
+                          <li className="flex min-w-0 gap-2" key={stage.status}>
+                            {index <= currentStage ? (
+                              <CheckCircle2
+                                aria-hidden="true"
+                                className="mt-0.5 shrink-0 text-success"
+                                size={15}
+                              />
+                            ) : (
+                              <Circle
+                                aria-hidden="true"
+                                className="mt-0.5 shrink-0 text-fg-faint"
+                                size={15}
+                              />
+                            )}
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium">{stage.label}</p>
+                              <p className="break-words text-xs text-fg-subtle">
+                                {stageUpdate
+                                  ? `${formatTrackingDate(stageUpdate.date)} · ${stageUpdate.note}`
+                                  : "No update recorded"}
+                              </p>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  ) : null}
+                </Card>
+              );
+            })}
+            {linkedOrders.length === 0 ? (
+              <p className="py-10 text-center text-sm text-fg-subtle">
+                No orders are linked to this account yet.
+              </p>
+            ) : null}
+          </section>
         ) : (
           <Card>
             <h2 className="text-lg font-semibold">Account overview</h2>

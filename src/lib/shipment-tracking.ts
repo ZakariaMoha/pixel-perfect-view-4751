@@ -1,4 +1,4 @@
-import type { OrderStatus } from "@/lib/demo-data";
+import type { OrderStatus, ShipmentUpdate } from "@/lib/demo-data";
 
 export const shipmentStages: Array<{ status: OrderStatus; label: string }> = [
   { status: "QUOTED", label: "Order confirmed" },
@@ -20,4 +20,17 @@ export function formatTrackingDate(value: string) {
   return Number.isNaN(date.getTime())
     ? value
     : date.toLocaleDateString("en-KE", { day: "2-digit", month: "short", year: "numeric" });
+}
+
+export function latestShipmentUpdate(updates: readonly ShipmentUpdate[] = []) {
+  return [...updates].sort((left, right) => right.date.localeCompare(left.date))[0];
+}
+
+export function latestShipmentUpdateForStatus(
+  updates: readonly ShipmentUpdate[] = [],
+  status: ShipmentUpdate["status"],
+) {
+  return [...updates]
+    .filter((update) => update.status === status)
+    .sort((left, right) => right.date.localeCompare(left.date))[0];
 }
