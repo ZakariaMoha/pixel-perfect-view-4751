@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -6,11 +7,86 @@ export function Card({
   children,
   className = "",
   lift,
+  variant = "default",
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & { lift?: boolean }) {
+}: React.HTMLAttributes<HTMLDivElement> & {
+  lift?: boolean;
+  variant?: "default" | "elevated" | "accent" | "flat";
+}) {
+  const variants = {
+    default: "glass-card",
+    elevated: "glass-card shadow-md",
+    accent: "glass-card border-border-accent",
+    flat: "rounded-md border border-border bg-bg-glass",
+  };
   return (
-    <div className={cn("glass-card", lift && "card-lift", className)} {...props}>
+    <div className={cn(variants[variant], lift && "card-lift", className)} {...props}>
       {children}
+    </div>
+  );
+}
+
+export function CardHeader({
+  title,
+  subtitle,
+  action,
+}: {
+  title: string;
+  subtitle?: string;
+  action?: ReactNode;
+}) {
+  return (
+    <div className="mb-4 flex items-start justify-between gap-3 border-b border-border pb-3">
+      <div>
+        <h3 className="text-base font-semibold text-fg">{title}</h3>
+        {subtitle ? <p className="mt-0.5 text-xs text-fg-muted">{subtitle}</p> : null}
+      </div>
+      {action}
+    </div>
+  );
+}
+
+export function EmptyState({
+  icon: Icon,
+  title,
+  description,
+  action,
+}: {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  action?: ReactNode;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center px-6 py-12 text-center sm:py-16">
+      <span className="mb-4 rounded-full bg-primary/10 p-4 text-primary">
+        <Icon aria-hidden="true" className="h-8 w-8" />
+      </span>
+      <h3 className="mb-2 text-lg font-semibold text-fg">{title}</h3>
+      <p className="mb-6 max-w-sm text-sm text-fg-muted">{description}</p>
+      {action}
+    </div>
+  );
+}
+
+export function Skeleton({ className = "" }: { className?: string }) {
+  return (
+    <div aria-hidden="true" className={cn("animate-pulse rounded-md bg-white/5", className)} />
+  );
+}
+
+export function TableSkeleton({ rows = 5 }: { rows?: number }) {
+  return (
+    <div aria-label="Loading records" className="space-y-2" role="status">
+      {Array.from({ length: rows }, (_, index) => (
+        <div key={index} className="flex items-center gap-4 p-3">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 flex-1" />
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-4 w-16" />
+        </div>
+      ))}
+      <span className="sr-only">Loading records</span>
     </div>
   );
 }
@@ -113,7 +189,9 @@ export function DataCard({
       <div className="space-y-1.5">
         {fields.map((field, index) => (
           <div key={`${field.label}-${index}`} className="flex items-center justify-between gap-3">
-            <span className="text-xs text-fg-subtle">{field.label}</span>
+            <span className="text-[11px] uppercase tracking-wider text-fg-subtle">
+              {field.label}
+            </span>
             <span className={cn("text-sm text-fg", field.mono && "font-mono")}>{field.value}</span>
           </div>
         ))}
@@ -148,12 +226,14 @@ export function Stat({
   label,
   value,
   sub,
+  delta,
   tone = "accent",
   icon,
 }: {
   label: string;
   value: string;
   sub?: string;
+  delta?: string;
   tone?: "accent" | "primary" | "success" | "danger" | "warning";
   icon?: ReactNode;
 }) {
@@ -164,16 +244,45 @@ export function Stat({
     danger: "text-danger",
     warning: "text-warning",
   };
+  const tint: Record<string, string> = {
+    accent: "bg-accent/10 text-accent",
+    primary: "bg-primary/10 text-primary",
+    success: "bg-success/10 text-success",
+    danger: "bg-danger/10 text-danger",
+    warning: "bg-warning/10 text-warning",
+  };
+  const edge: Record<string, string> = {
+    accent: "from-transparent via-accent to-transparent",
+    primary: "from-transparent via-primary to-transparent",
+    success: "from-transparent via-success to-transparent",
+    danger: "from-transparent via-danger to-transparent",
+    warning: "from-transparent via-warning to-transparent",
+  };
   return (
     <Card className="relative overflow-hidden">
-      <div className="flex items-start justify-between gap-3">
-        <p className="text-[11px] uppercase tracking-[0.12em] text-fg-subtle">{label}</p>
-        {icon ? (
-          <span className={cn("rounded-md bg-bg-elev-2 p-2", ring[tone])}>{icon}</span>
+      <div className="flex items-center justify-between gap-3">
+        {icon ? <span className={cn("rounded-md p-2", tint[tone], ring[tone])}>{icon}</span> : null}
+        {delta ? (
+          <span
+            className={cn(
+              "rounded-full px-2 py-1 text-[10px] font-semibold",
+              tint[tone],
+              ring[tone],
+            )}
+          >
+            {delta}
+          </span>
         ) : null}
       </div>
-      <p className="mt-3 font-mono text-3xl font-semibold tracking-tight text-fg">{value}</p>
+      <p className="mt-3 text-[11px] uppercase tracking-wider text-fg-subtle">{label}</p>
+      <p className="glow-text mt-1 font-mono text-3xl font-semibold tracking-tight text-fg">
+        {value}
+      </p>
       {sub ? <p className={cn("mt-1 text-xs text-fg-muted", ring[tone])}>{sub}</p> : null}
+      <span
+        aria-hidden="true"
+        className={cn("absolute inset-x-6 bottom-0 h-px bg-gradient-to-r", edge[tone])}
+      />
     </Card>
   );
 }
@@ -190,7 +299,7 @@ export function PageHeader({
   return (
     <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-fg">{title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-fg">{title}</h1>
         {subtitle ? <p className="mt-1.5 text-sm text-fg-muted">{subtitle}</p> : null}
       </div>
       {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
@@ -263,5 +372,5 @@ export function Cell({ children, className }: { children: ReactNode; className?:
 }
 
 export function SectionTitle({ children }: { children: ReactNode }) {
-  return <h2 className="mb-4 text-lg font-semibold tracking-tight text-fg">{children}</h2>;
+  return <h2 className="mb-4 text-base font-semibold tracking-tight text-fg">{children}</h2>;
 }

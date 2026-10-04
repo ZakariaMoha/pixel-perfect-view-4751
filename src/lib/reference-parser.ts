@@ -7,7 +7,18 @@ export type ParsedReference = {
 };
 
 const MONTHS: Record<string, number> = {
-  jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12,
+  jan: 1,
+  feb: 2,
+  mar: 3,
+  apr: 4,
+  may: 5,
+  jun: 6,
+  jul: 7,
+  aug: 8,
+  sep: 9,
+  oct: 10,
+  nov: 11,
+  dec: 12,
 };
 
 /** Extract a payment reference, amount and date from a pasted WhatsApp / SMS / WeChat message. */
@@ -43,7 +54,9 @@ export function parseReference(text: string): ParsedReference {
 
   const dmy = t.match(/\b(\d{1,2})\/(\d{1,2})\/(\d{2,4})\b/);
   const iso = t.match(/\b(20\d{2})-(\d{2})-(\d{2})\b/);
-  const named = t.match(/\b(\d{1,2})\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s*(\d{4})?/i);
+  const named = t.match(
+    /\b(\d{1,2})\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s*(\d{4})?/i,
+  );
   const pad = (n: number) => String(n).padStart(2, "0");
   if (iso) out.date = `${iso[1]}-${iso[2]}-${iso[3]}`;
   else if (dmy) {

@@ -14,6 +14,7 @@ function InboxPage() {
       title="Inbox"
       subtitle="Client and agent conversation threads"
       records={collection.records}
+      loading={!collection.hydrated}
       onCreate={collection.create}
       onUpdate={collection.update}
       onDelete={collection.remove}

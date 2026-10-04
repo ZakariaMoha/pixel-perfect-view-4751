@@ -27,6 +27,7 @@ function OrdersList() {
       title="Orders"
       subtitle={`${usd(collection.records.reduce((sum, order) => sum + order.valueUsd, 0))} total order value`}
       records={collection.records}
+      loading={!collection.hydrated}
       onCreate={collection.create}
       onUpdate={collection.update}
       onDelete={collection.remove}

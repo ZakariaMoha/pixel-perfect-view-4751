@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDownLeft, ArrowUpRight, Plus, Search, Wallet } from "lucide-react";
-import { Button, Card, PageHeader, Stat, Table } from "@/components/kit";
+import { ArrowDownLeft, ArrowUpRight, DollarSign, Plus, Search, Wallet } from "lucide-react";
+import { Button, Card, EmptyState, PageHeader, Skeleton, Stat, Table } from "@/components/kit";
 import { PaymentAmount, PaymentStatusPill } from "@/components/payments/shared";
 import { Input } from "@/components/ui/input";
 import { payments, type Payment } from "@/lib/demo-data";
@@ -261,10 +261,56 @@ function PaymentsPage() {
           </a>
         ))}
       </div>
-      {filtered.length === 0 ? (
-        <div className="py-12 text-center text-sm text-fg-muted">
-          No payments match these filters.
-        </div>
+      {!collection.hydrated ? (
+        <Card className="!p-2">
+          <div aria-label="Loading payments" className="space-y-3 p-3" role="status">
+            {Array.from({ length: 5 }, (_, index) => (
+              <div key={index} className="flex items-center gap-4 py-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 flex-1" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            ))}
+            <span className="sr-only">Loading payments</span>
+          </div>
+        </Card>
+      ) : filtered.length === 0 ? (
+        <Card className="!p-0">
+          <EmptyState
+            description={
+              collection.records.length === 0
+                ? "Record client deposits, supplier transfers, and fees to keep the payment register current."
+                : "No payments match these filters. Adjust the search or filters to see more records."
+            }
+            icon={DollarSign}
+            title={collection.records.length === 0 ? "No payments yet" : "No matching payments"}
+            action={
+              collection.records.length === 0 ? (
+                <a href="/app/payments/new">
+                  <Button type="button">
+                    <Plus size={16} /> New payment
+                  </Button>
+                </a>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setActiveTab("All");
+                    setSearch("");
+                    setClient("All clients");
+                    setSupplier("All suppliers");
+                    setCurrency("All currencies");
+                    setFromDate("");
+                    setToDate("");
+                  }}
+                  type="button"
+                  variant="glass"
+                >
+                  Clear filters
+                </Button>
+              )
+            }
+          />
+        </Card>
       ) : null}
     </>
   );

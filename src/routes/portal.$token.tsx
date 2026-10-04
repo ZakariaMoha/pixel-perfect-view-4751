@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, CheckCircle2, Circle } from "lucide-react";
-import { Card } from "@/components/kit";
+import { ArrowUpRight, CheckCircle2, Circle, DollarSign, Package } from "lucide-react";
+import { Card, EmptyState } from "@/components/kit";
 import { BrandLogo } from "@/components/brand";
 import { PaymentStatusPill } from "@/components/payments/shared";
 import { clients, orders, payments, statusMeta, type Order } from "@/lib/demo-data";
@@ -124,7 +124,13 @@ function ClientPortalPage() {
                 </Card>
               ))}
               {visiblePayments.length === 0 ? (
-                <p className="py-10 text-center text-sm text-fg-subtle">No payment activity yet.</p>
+                <Card className="!p-0">
+                  <EmptyState
+                    description="Received payments will appear here after TradeHub records them."
+                    icon={DollarSign}
+                    title="No payment activity yet"
+                  />
+                </Card>
               ) : null}
             </div>
           </>
@@ -261,9 +267,13 @@ function ClientPortalPage() {
               );
             })}
             {linkedOrders.length === 0 ? (
-              <p className="py-10 text-center text-sm text-fg-subtle">
-                No orders are linked to this account yet.
-              </p>
+              <Card className="!p-0">
+                <EmptyState
+                  description="Orders and shipment updates will appear here once they are linked to your account."
+                  icon={Package}
+                  title="No orders linked yet"
+                />
+              </Card>
             ) : null}
           </section>
         ) : (

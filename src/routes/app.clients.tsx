@@ -14,6 +14,7 @@ function ClientsPage() {
       title="Clients"
       subtitle="Client accounts and relationship history"
       records={collection.records}
+      loading={!collection.hydrated}
       onCreate={collection.create}
       onUpdate={collection.update}
       onDelete={collection.remove}

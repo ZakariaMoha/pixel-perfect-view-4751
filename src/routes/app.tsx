@@ -139,8 +139,7 @@ function AdminLayout() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full overflow-x-clip bg-bg">
-      <div className="pointer-events-none fixed inset-0 grid-overlay opacity-40" />
+    <div className="min-h-screen w-full overflow-x-clip">
       <div className="relative flex min-w-0 w-full">
         <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-border bg-bg-glass/70 md:flex">
           <Link to="/" className="flex items-center gap-2.5 px-5 py-5">
@@ -225,7 +224,7 @@ function AdminLayout() {
             </div>
           </header>
 
-          <main className="min-w-0 flex-1 px-4 py-6 pb-20 md:px-6 md:py-8 md:pb-8">
+          <main className="min-w-0 flex-1 px-4 py-6 pb-20 md:px-6 md:py-8 md:pb-8 lg:px-8">
             <Outlet />
           </main>
           <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-4 text-xs text-fg-subtle md:px-6">

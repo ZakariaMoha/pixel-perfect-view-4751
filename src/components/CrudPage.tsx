@@ -1,6 +1,28 @@
 import { useState, type FormEvent, type ReactNode } from "react";
-import { Check, Pencil, Plus, Search, Trash2, X } from "lucide-react";
-import { Button, Card, DataCard, PageHeader, Table } from "@/components/kit";
+import {
+  Building2,
+  Check,
+  Factory,
+  MessageSquare,
+  Package,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+  Truck,
+  Users,
+  X,
+  type LucideIcon,
+} from "lucide-react";
+import {
+  Button,
+  Card,
+  DataCard,
+  EmptyState,
+  PageHeader,
+  Table,
+  TableSkeleton,
+} from "@/components/kit";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Dialog,
@@ -36,6 +58,7 @@ type CrudPageProps<T extends { id: string }> = {
   onCreate: (record: Omit<T, "id">) => void;
   onUpdate: (id: string, changes: Partial<Omit<T, "id">>) => void;
   onDelete: (id: string) => void;
+  loading?: boolean;
   emptyMessage?: string;
 };
 
@@ -48,6 +71,7 @@ export function CrudPage<T extends { id: string }>({
   onCreate,
   onUpdate,
   onDelete,
+  loading = false,
   emptyMessage = "No records yet.",
 }: CrudPageProps<T>) {
   const [search, setSearch] = useState("");
@@ -64,6 +88,20 @@ export function CrudPage<T extends { id: string }>({
         .includes(search.toLocaleLowerCase()),
     ),
   );
+  const addLabel = title.toLocaleLowerCase().replace(/s$/, "");
+  const EmptyIcon: LucideIcon = title.toLocaleLowerCase().includes("order")
+    ? Package
+    : title.toLocaleLowerCase().includes("sourc")
+      ? Search
+      : title.toLocaleLowerCase().includes("client")
+        ? Users
+        : title.toLocaleLowerCase().includes("agent")
+          ? Building2
+          : title.toLocaleLowerCase().includes("supplier")
+            ? Factory
+            : title.toLocaleLowerCase().includes("logistic")
+              ? Truck
+              : MessageSquare;
 
   const openCreate = () => {
     setEditing(null);
@@ -116,9 +154,30 @@ export function CrudPage<T extends { id: string }>({
         />
       </div>
 
-      {visibleRecords.length === 0 ? (
-        <Card className="text-sm text-muted-foreground">
-          {records.length === 0 ? emptyMessage : "No matching records."}
+      {loading ? (
+        <Card className="!p-2">
+          <TableSkeleton rows={5} />
+        </Card>
+      ) : visibleRecords.length === 0 ? (
+        <Card className="!p-0">
+          <EmptyState
+            description={
+              records.length === 0 ? emptyMessage : "Try another search term or clear your search."
+            }
+            icon={EmptyIcon}
+            title={records.length === 0 ? `No ${addLabel} yet` : "No matching records"}
+            action={
+              records.length === 0 ? (
+                <Button onClick={openCreate} type="button">
+                  <Plus size={16} /> Add {addLabel}
+                </Button>
+              ) : (
+                <Button onClick={() => setSearch("")} type="button" variant="glass">
+                  Clear search
+                </Button>
+              )
+            }
+          />
         </Card>
       ) : isMobile ? (
         <div className="space-y-3">

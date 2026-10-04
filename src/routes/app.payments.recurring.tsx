@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CalendarClock, Pause, Pencil, Play, Plus, Trash2 } from "lucide-react";
-import { Button, Card, PageHeader } from "@/components/kit";
+import { CalendarClock, Pause, Pencil, Play, Plus, Repeat2, Trash2 } from "lucide-react";
+import { Button, Card, EmptyState, PageHeader, Skeleton } from "@/components/kit";
 import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/app/payments/recurring")({
@@ -55,6 +55,7 @@ function RecurringExpensesPage() {
   const [templates, setTemplates] = useState<RecurringTemplate[]>(seededTemplates);
   const [editing, setEditing] = useState<RecurringTemplate | null>(null);
   const [formOpen, setFormOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
@@ -62,6 +63,8 @@ function RecurringExpensesPage() {
       if (saved) setTemplates(JSON.parse(saved) as RecurringTemplate[]);
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
+    } finally {
+      setHydrated(true);
     }
   }, []);
 
@@ -274,8 +277,30 @@ function RecurringExpensesPage() {
           </Card>
         ))}
       </div>
-      {!templates.length ? (
-        <p className="py-12 text-center text-sm text-fg-muted">No recurring templates yet.</p>
+      {!hydrated ? (
+        <Card className="!p-2">
+          <div aria-label="Loading recurring expenses" className="space-y-3 p-3" role="status">
+            {Array.from({ length: 3 }, (_, index) => (
+              <div key={index} className="flex items-center gap-4 py-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 flex-1" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            ))}
+            <span className="sr-only">Loading recurring expenses</span>
+          </div>
+        </Card>
+      ) : !templates.length ? (
+        <EmptyState
+          description="Set up a repeat schedule for warehouse rent, software, or other predictable expenses."
+          icon={Repeat2}
+          title="No recurring templates yet"
+          action={
+            <Button onClick={() => setFormOpen(true)} type="button">
+              <Plus size={16} /> New template
+            </Button>
+          }
+        />
       ) : null}
     </>
   );

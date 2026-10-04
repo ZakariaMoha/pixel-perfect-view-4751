@@ -28,6 +28,7 @@ function LogisticsPage() {
         title="Logistics partners"
         subtitle="Freight routes, rates, and reliability"
         records={collection.records}
+        loading={!collection.hydrated}
         onCreate={collection.create}
         onUpdate={collection.update}
         onDelete={collection.remove}

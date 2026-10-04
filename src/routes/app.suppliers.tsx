@@ -14,6 +14,7 @@ function SuppliersPage() {
       title="Suppliers"
       subtitle="Factory performance and sourcing categories"
       records={collection.records}
+      loading={!collection.hydrated}
       onCreate={collection.create}
       onUpdate={collection.update}
       onDelete={collection.remove}

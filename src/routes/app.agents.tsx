@@ -14,6 +14,7 @@ function AgentsPage() {
       title="Agents"
       subtitle="China-based sourcing partners"
       records={collection.records}
+      loading={!collection.hydrated}
       onCreate={collection.create}
       onUpdate={collection.update}
       onDelete={collection.remove}

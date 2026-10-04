@@ -34,6 +34,7 @@ function SourcingList() {
       title="Sourcing"
       subtitle="Inquiry → RFQ → scored quotes → client quotation"
       records={collection.records}
+      loading={!collection.hydrated}
       onCreate={collection.create}
       onUpdate={collection.update}
       onDelete={collection.remove}

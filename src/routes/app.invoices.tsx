@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   CheckCircle2,
   Download,
+  FileSearch,
   FileText,
   PackageCheck,
   Plus,
@@ -11,7 +12,7 @@ import {
   Share2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Button, Card, PageHeader, Stat, Table } from "@/components/kit";
+import { Button, Card, EmptyState, PageHeader, Skeleton, Stat, Table } from "@/components/kit";
 import {
   Dialog,
   DialogContent,
@@ -337,13 +338,48 @@ function DocumentsPage() {
           </select>
         </div>
       </Card>
-      {visibleRecords.length === 0 ? (
-        <Card className="py-12 text-center">
-          <FileText className="mx-auto text-fg-subtle" size={28} />
-          <p className="mt-3 font-medium">No documents match this view</p>
-          <p className="mt-1 text-sm text-fg-subtle">
-            Create a document from an order to get started.
-          </p>
+      {!collection.hydrated ? (
+        <Card className="!p-2">
+          <div aria-label="Loading documents" className="space-y-3 p-3" role="status">
+            {Array.from({ length: 5 }, (_, index) => (
+              <div key={index} className="flex items-center gap-4 py-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 flex-1" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            ))}
+            <span className="sr-only">Loading documents</span>
+          </div>
+        </Card>
+      ) : visibleRecords.length === 0 ? (
+        <Card className="!p-0">
+          <EmptyState
+            description={
+              collection.records.length === 0
+                ? "Create an invoice or shipment document from an order to get started."
+                : "Change the search or document type to find the document you need."
+            }
+            icon={FileSearch}
+            title={collection.records.length === 0 ? "No documents yet" : "No matching documents"}
+            action={
+              collection.records.length === 0 ? (
+                <Button onClick={() => setCreateOpen(true)} type="button">
+                  <Plus size={16} /> Create document
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setSearch("");
+                    setKindFilter("All documents");
+                  }}
+                  type="button"
+                  variant="glass"
+                >
+                  Clear filters
+                </Button>
+              )
+            }
+          />
         </Card>
       ) : (
         <>

@@ -1,7 +1,16 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { Camera, CheckCircle2, PackageCheck, Plus, Ship, Truck } from "lucide-react";
 import { toast } from "sonner";
-import { Badge, Button, Card, PageHeader, Stat, Table } from "@/components/kit";
+import {
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  PageHeader,
+  Stat,
+  Table,
+  TableSkeleton,
+} from "@/components/kit";
 import {
   Dialog,
   DialogContent,
@@ -263,9 +272,29 @@ export function ShipmentTracker({ onPartners }: ShipmentTrackerProps) {
           <option value="all">All shipments</option>
         </select>
       </div>
-      {visibleOrders.length === 0 ? (
-        <Card className="py-10 text-center text-sm text-fg-muted">
-          No shipments match this view.
+      {!collection.hydrated ? (
+        <Card className="!p-2">
+          <TableSkeleton rows={5} />
+        </Card>
+      ) : visibleOrders.length === 0 ? (
+        <Card className="!p-0">
+          <EmptyState
+            description="Try another search or include delivered shipments to find the order you need."
+            icon={PackageCheck}
+            title="No shipments match this view"
+            action={
+              <Button
+                onClick={() => {
+                  setSearch("");
+                  setFilter("all");
+                }}
+                type="button"
+                variant="glass"
+              >
+                Show all shipments
+              </Button>
+            }
+          />
         </Card>
       ) : (
         <>
