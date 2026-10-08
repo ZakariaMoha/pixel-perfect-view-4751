@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   BarChart,
@@ -104,12 +104,42 @@ const mobilePrimaryNav = [
 ] as const;
 
 function AdminLayout() {
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notificationsRead, setNotificationsRead] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const [displayName, setDisplayName] = useState("Joan Mwangi");
+  const [isSessionReady, setIsSessionReady] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    void import("@/lib/supabase/client")
+      .then(({ supabase }) => supabase.auth.getSession())
+      .then(({ data, error }) => {
+        if (!isMounted) {
+          return;
+        }
+
+        if (error || !data.session) {
+          navigate({ to: "/login", replace: true });
+          return;
+        }
+
+        setIsSessionReady(true);
+      })
+      .catch(() => {
+        if (isMounted) {
+          navigate({ to: "/login", replace: true });
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [navigate]);
 
   useEffect(() => {
     const loadDisplayName = () => {
@@ -137,6 +167,14 @@ function AdminLayout() {
     window.addEventListener(PREFERENCES_EVENT, loadDisplayName);
     return () => window.removeEventListener(PREFERENCES_EVENT, loadDisplayName);
   }, []);
+
+  if (!isSessionReady) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-hero text-sm text-fg-muted">
+        Checking your session...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full overflow-x-clip">

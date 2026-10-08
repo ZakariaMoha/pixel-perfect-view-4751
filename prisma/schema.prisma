@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ProductKnowledge {
+  id                 String    @id @default(cuid())
+  tenantId           String
+  category           String
+  subCategory        String?
+  chineseKeywords    String[]
+  englishKeywords    String[]
+  hsCode             String?
+  avgUnitPriceCny    Decimal?  @db.Decimal(10, 2)
+  avgMoq             Int?
+  avgLeadTimeDays    Int?
+  avgWeightKg        Decimal?  @db.Decimal(10, 3)
+  avgCbmPerPiece     Decimal?  @db.Decimal(10, 4)
+  preferredSupplierId String?
+  orderCount         Int       @default(0)
+  lastOrderedAt      DateTime?
+  lastKnownPrice     Decimal?  @db.Decimal(10, 2)
+  lastPriceUpdatedAt DateTime?
+  confidenceScore    Float     @default(0)
+  needsReview        Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([tenantId, category, subCategory])
+  @@index([tenantId, category])
+}
+
+model SupplierScore {
+  id                 String   @id @default(cuid())
+  supplierId         String
+  tenantId           String
+  qualityScore       Float    @default(0)
+  onTimeScore        Float    @default(0)
+  priceScore         Float    @default(0)
+  communicationScore Float    @default(0)
+  repeatScore        Float    @default(0)
+  overallScore       Float    @default(0)
+  totalOrders        Int      @default(0)
+  totalRevenueCny    Decimal  @default(0) @db.Decimal(14, 2)
+  avgResponseHours   Float?
+  qcPassRate         Float?
+  onTimeRate         Float?
+  updatedAt          DateTime @updatedAt
+
+  @@unique([supplierId, tenantId])
+}
+
+model LogisticsScore {
+  id                 String   @id @default(cuid())
+  partnerId          String
+  tenantId           String
+  reliabilityScore   Float    @default(0)
+  rateScore          Float    @default(0)
+  routeScore         Float    @default(0)
+  clientHistoryScore Float    @default(0)
+  overallScore       Float    @default(0)
+  totalShipments     Int      @default(0)
+  onTimeRate         Float?
+  avgTransitDays     Float?
+  clientsServed      String[]
+  routesUsed         String[]
+  updatedAt          DateTime @updatedAt
+
+  @@unique([partnerId, tenantId])
+}
+
+model DraftQuote {
+  id                    String            @id @default(cuid())
+  tenantId              String
+  sourcingRequestId     String            @unique
+  productKnowledgeId    String?
+  confidenceTier        String
+  confidenceScore       Float
+  recommendedSupplierId String?
+  recommendedLogisticsId String?
+  alternateSuppliers    Json?
+  alternateLogistics    Json?
+  productCostCny        Decimal           @db.Decimal(10, 2)
+  productMarkup         Decimal           @db.Decimal(10, 2)
+  freightCostUsd        Decimal           @db.Decimal(10, 2)
+  freightMarkup         Decimal           @db.Decimal(10, 2)
+  serviceFee            Decimal           @db.Decimal(10, 2)
+  totalKes              Decimal           @db.Decimal(14, 2)
+  totalProfitKes        Decimal           @db.Decimal(14, 2)
+  marginPct             Float
+  usdToCny             Decimal           @db.Decimal(10, 4)
+  usdToKes             Decimal           @db.Decimal(10, 4)
+  cnyToKes             Decimal           @db.Decimal(10, 4)
+  fxLockedAt           DateTime?
+  status               String            @default("DRAFT")
+  preliminarySentAt    DateTime?
+  finalSentAt          DateTime?
+  approvedBy           String?
+  approvedAt           DateTime?
+  adminNotes           String?
+  rejectionReason      String?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+}
+
+model MessageQueue {
+  id                String   @id @default(cuid())
+  tenantId          String
+  channel           String
+  direction         String
+  recipientId       String
+  recipientType     String
+  content           String
+  contentTranslated String?
+  attachments       String[]
+  relatedEntityType String?
+  relatedEntityId   String?
+  status            String   @default("QUEUED")
+  scheduledFor      DateTime?
+  approvedBy        String?
+  approvedAt        DateTime?
+  sentAt            DateTime?
+  deliveredAt       DateTime?
+  priority          String   @default("NORMAL")
+  attemptCount      Int      @default(0)
+  lastError         String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([tenantId, status, createdAt])
+}
+
+model RfqBatch {
+  id                 String   @id @default(cuid())
+  tenantId           String
+  sourcingRequestId  String
+  primarySupplierId  String?
+  primaryResponseAt  DateTime?
+  primaryPriceCny    Decimal?  @db.Decimal(10, 2)
+  backupSupplierIds  String[]
+  backupResponses    Json?
+  status             String   @default("SENT")
+  deadline           DateTime
+  selectedSupplierId String?
+  selectionReason    String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAgentsRouteImport } from './routes/app.agents'
 import { Route as AppClientsRouteImport } from './routes/app.clients'
@@ -23,6 +24,7 @@ import { Route as AppPaymentsRouteImport } from './routes/app.payments'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppSuppliersRouteImport } from './routes/app.suppliers'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as PortalTokenRouteImport } from './routes/portal.$token'
 import { Route as AppOrdersIndexRouteImport } from './routes/app.orders.index'
 import { Route as AppOrdersIdRouteImport } from './routes/app.orders.$id'
@@ -43,6 +45,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -105,6 +112,11 @@ const AppSuppliersRoute = AppSuppliersRouteImport.update({
   path: '/suppliers',
   getParentRoute: () => AppRoute,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortalTokenRoute = PortalTokenRouteImport.update({
   id: '/portal/$token',
   path: '/portal/$token',
@@ -164,6 +176,7 @@ const AppSourcingIdRoute = AppSourcingIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
   '/app/agents': typeof AppAgentsRoute
   '/app/clients': typeof AppClientsRoute
   '/app/fx': typeof AppFxRoute
@@ -175,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/suppliers': typeof AppSuppliersRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/portal/$token': typeof PortalTokenRoute
   '/app/': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
@@ -190,6 +204,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/app/agents': typeof AppAgentsRoute
   '/app/clients': typeof AppClientsRoute
   '/app/fx': typeof AppFxRoute
@@ -200,6 +215,7 @@ export interface FileRoutesByTo {
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/suppliers': typeof AppSuppliersRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/portal/$token': typeof PortalTokenRoute
   '/app': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
@@ -217,6 +233,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
   '/app/agents': typeof AppAgentsRoute
   '/app/clients': typeof AppClientsRoute
   '/app/fx': typeof AppFxRoute
@@ -228,6 +245,7 @@ export interface FileRoutesById {
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/suppliers': typeof AppSuppliersRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/portal/$token': typeof PortalTokenRoute
   '/app/': typeof AppIndexRoute
   '/app/orders/$id': typeof AppOrdersIdRoute
@@ -246,6 +264,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/login'
     | '/app/agents'
     | '/app/clients'
     | '/app/fx'
@@ -257,6 +276,7 @@ export interface FileRouteTypes {
     | '/app/reports'
     | '/app/settings'
     | '/app/suppliers'
+    | '/auth/callback'
     | '/portal/$token'
     | '/app/'
     | '/app/orders/$id'
@@ -272,6 +292,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/app/agents'
     | '/app/clients'
     | '/app/fx'
@@ -282,6 +303,7 @@ export interface FileRouteTypes {
     | '/app/reports'
     | '/app/settings'
     | '/app/suppliers'
+    | '/auth/callback'
     | '/portal/$token'
     | '/app'
     | '/app/orders/$id'
@@ -298,6 +320,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/login'
     | '/app/agents'
     | '/app/clients'
     | '/app/fx'
@@ -309,6 +332,7 @@ export interface FileRouteTypes {
     | '/app/reports'
     | '/app/settings'
     | '/app/suppliers'
+    | '/auth/callback'
     | '/portal/$token'
     | '/app/'
     | '/app/orders/$id'
@@ -326,6 +350,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   PortalTokenRoute: typeof PortalTokenRoute
 }
 
@@ -343,6 +369,13 @@ declare module '@tanstack/react-router' {
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -428,6 +461,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/suppliers'
       preLoaderRoute: typeof AppSuppliersRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/portal/$token': {
       id: '/portal/$token'
@@ -574,6 +614,8 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   PortalTokenRoute: PortalTokenRoute,
 }
 export const routeTree = rootRouteImport
