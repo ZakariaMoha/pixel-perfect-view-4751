@@ -77,7 +77,10 @@ const navigationSections = [
   },
   {
     title: "SYSTEM",
-    items: [{ to: "/app/settings", label: "Settings", icon: Settings }],
+    items: [
+      { to: "/app/brand", label: "Brand check", icon: Sparkles },
+      { to: "/app/settings", label: "Settings", icon: Settings },
+    ],
   },
 ] as const;
 
