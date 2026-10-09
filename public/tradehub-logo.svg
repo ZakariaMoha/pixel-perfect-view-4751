@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" fill="none">
   <defs>
     <linearGradient id="silver" x1="192" y1="26" x2="483" y2="94" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F8FAFB"/>
-      <stop offset=".35" stop-color="#9CA7AF"/>
-      <stop offset=".62" stop-color="#E5E9EB"/>
-      <stop offset="1" stop-color="#88939B"/>
+      <stop stop-color="#3A4550"/>
+      <stop offset=".35" stop-color="#141C24"/>
+      <stop offset=".62" stop-color="#2E3A44"/>
+      <stop offset="1" stop-color="#0F1620"/>
     </linearGradient>
     <linearGradient id="steel" x1="26" y1="22" x2="132" y2="140" gradientUnits="userSpaceOnUse">
       <stop stop-color="#F5F7F8"/>
