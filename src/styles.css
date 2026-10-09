@@ -12,11 +12,11 @@
 
 @theme {
   /* SURFACES */
-  --color-bg: #0a1628;
-  --color-bg-elev-1: #0f1f38;
-  --color-bg-elev-2: #142b4a;
-  --color-bg-glass: rgba(255, 255, 255, 0.03);
-  --color-bg-glass-hover: rgba(255, 255, 255, 0.06);
+  --color-bg: #ffffff;
+  --color-bg-elev-1: #f7f9fb;
+  --color-bg-elev-2: #eef2f7;
+  --color-bg-glass: rgba(15, 31, 56, 0.025);
+  --color-bg-glass-hover: rgba(15, 31, 56, 0.05);
 
   /* BRAND */
   --color-primary: #ff6b35;
@@ -32,14 +32,14 @@
   --color-status-muted: #64748b;
 
   /* TEXT */
-  --color-fg: #ffffff;
-  --color-fg-muted: rgba(255, 255, 255, 0.72);
-  --color-fg-subtle: rgba(255, 255, 255, 0.45);
-  --color-fg-faint: rgba(255, 255, 255, 0.28);
+  --color-fg: #0a1628;
+  --color-fg-muted: rgba(10, 22, 40, 0.72);
+  --color-fg-subtle: rgba(10, 22, 40, 0.5);
+  --color-fg-faint: rgba(10, 22, 40, 0.32);
 
   /* BORDERS */
-  --color-border: rgba(255, 255, 255, 0.06);
-  --color-border-strong: rgba(255, 255, 255, 0.12);
+  --color-border: rgba(10, 22, 40, 0.08);
+  --color-border-strong: rgba(10, 22, 40, 0.15);
   --color-border-accent: rgba(78, 205, 196, 0.35);
 
   /* RADIUS */
@@ -64,7 +64,7 @@
   --background: var(--color-bg);
   --background-alt: var(--color-bg-elev-1);
   --background-elev: var(--color-bg-elev-2);
-  --bridge: #203b5a;
+  --bridge: #dfe9f3;
 
   --foreground: var(--color-fg);
   --muted-foreground: var(--color-fg-muted);
@@ -78,15 +78,15 @@
 
   --primary: var(--color-primary);
   --primary-hover: var(--color-primary-hover);
-  --primary-foreground: #0a1628;
+  --primary-foreground: #ffffff;
 
   --accent: var(--color-accent);
   --accent-hover: var(--color-accent-hover);
   --accent-foreground: #0a1628;
 
-  --secondary: rgba(255, 255, 255, 0.06);
+  --secondary: rgba(10, 22, 40, 0.05);
   --secondary-foreground: var(--color-fg);
-  --muted: rgba(255, 255, 255, 0.05);
+  --muted: rgba(10, 22, 40, 0.04);
 
   --china-red: #ef4444;
   --china-gold: #f59e0b;
@@ -103,7 +103,7 @@
   --border: var(--color-border);
   --border-strong: var(--color-border-strong);
   --border-accent: var(--color-border-accent);
-  --input: rgba(255, 255, 255, 0.06);
+  --input: rgba(10, 22, 40, 0.08);
   --ring: rgba(78, 205, 196, 0.5);
 
   --gradient-text: linear-gradient(90deg, var(--primary), var(--warning), var(--success));
@@ -218,13 +218,13 @@ body {
 }
 
 @utility glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(24px);
   border: 1px solid var(--border);
 }
 
 @utility glass-strong {
-  background: rgba(16, 33, 58, 0.72);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(24px);
   border: 1px solid var(--border-strong);
 }
@@ -318,8 +318,8 @@ body {
 
 @utility grid-overlay {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(10, 22, 40, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 22, 40, 0.05) 1px, transparent 1px);
   background-size: 56px 56px;
 }
 
