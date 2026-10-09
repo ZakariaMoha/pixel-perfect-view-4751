@@ -267,7 +267,7 @@ function AdminLayout() {
           </main>
           <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-4 text-xs text-fg-subtle md:px-6">
             <BrandLogo size={28} />
-            <span>China to Kenya trade operations</span>
+            <span>From China to the world</span>
           </footer>
         </div>
       </div>

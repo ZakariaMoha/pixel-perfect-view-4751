@@ -66,7 +66,7 @@ export const Route = createFileRoute("/app/")({
       {
         name: "description",
         content:
-          "Live KPIs for the China to Kenya corridor: active orders, revenue, profit, FX impact and commissions.",
+          "Live KPIs for the China-to-world corridor: active orders, revenue, profit, FX impact and commissions.",
       },
       { property: "og:title", content: "TradeHub Dashboard" },
       {
