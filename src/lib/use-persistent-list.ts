@@ -54,13 +54,9 @@ export function usePersistentList<T extends IdentifiedRecord>(
   }, [initialRecords, storageKey]);
 
   const persist = (nextRecords: T[]) => {
+    window.localStorage.setItem(storageKey, JSON.stringify(nextRecords));
     setRecords(nextRecords);
-    try {
-      window.localStorage.setItem(storageKey, JSON.stringify(nextRecords));
-      window.dispatchEvent(new CustomEvent(DATA_EVENT, { detail: storageKey }));
-    } catch {
-      return;
-    }
+    window.dispatchEvent(new CustomEvent(DATA_EVENT, { detail: storageKey }));
   };
 
   const create = (record: Omit<T, "id">) => {

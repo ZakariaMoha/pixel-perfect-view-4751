@@ -406,7 +406,18 @@ export const overall = (q: Quote) =>
     q.reliabilityScore * 0.15
   ).toFixed(1);
 
-export const clients = [
+export type Client = {
+  id: string;
+  name: string;
+  city: string;
+  orders: number;
+  lifetimeUsd: number;
+  lastOrder: string;
+  tier: "Bronze" | "Silver" | "Gold";
+  risk: "Low" | "Medium" | "High";
+};
+
+export const clients: Client[] = [
   {
     id: "1",
     name: "Amani Electronics",

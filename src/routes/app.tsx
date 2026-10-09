@@ -19,6 +19,7 @@ import {
   PackageSearch,
   Search,
   Settings,
+  Sparkles,
   TrendingUp,
   Truck,
   Users,
