@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { getSupabaseClient } from "@/lib/supabase/client";
 
 export const Route = createFileRoute("/auth/callback")({
   component: AuthCallbackPage,
@@ -18,13 +18,13 @@ function AuthCallbackPage() {
         const code = new URLSearchParams(window.location.search).get("code");
 
         if (code) {
-          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          const { error } = await getSupabaseClient().auth.exchangeCodeForSession(code);
           if (error) {
             throw error;
           }
         }
 
-        const { data, error } = await supabase.auth.getSession();
+        const { data, error } = await getSupabaseClient().auth.getSession();
 
         if (!isActive) {
           return;

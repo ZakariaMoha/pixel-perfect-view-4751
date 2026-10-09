@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/kit";
 import { signInWithMagicLink } from "@/lib/auth";
 import { BrandLogo } from "@/components/brand";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -83,7 +84,11 @@ function LoginPage() {
             </div>
           ) : null}
 
-          <Button className="w-full" disabled={isSubmitting || !email.trim()} type="submit">
+          <Button
+            className="w-full"
+            disabled={isSubmitting || !email.trim() || !isSupabaseConfigured}
+            type="submit"
+          >
             {isSubmitting ? "Sending link..." : "Send magic link"}
           </Button>
         </form>
@@ -95,9 +100,17 @@ function LoginPage() {
           </Link>
         </p>
 
-        <div className="mt-6 rounded-md border border-border bg-secondary/40 px-3 py-2 text-xs text-fg-muted">
-          The app uses Supabase magic links for secure tenant access. Configure the environment
-          variables before testing the sign-in flow.
+        <div
+          className={`mt-6 rounded-md border px-3 py-2 text-xs ${
+            isSupabaseConfigured
+              ? "border-border bg-secondary/40 text-fg-muted"
+              : "border-warning/30 bg-warning/10 text-warning"
+          }`}
+          role={isSupabaseConfigured ? undefined : "alert"}
+        >
+          {isSupabaseConfigured
+            ? "The app uses Supabase magic links for secure tenant access."
+            : "Sign-in is unavailable until VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are configured in Cloudflare Workers Builds and the app is redeployed."}
         </div>
       </div>
     </div>

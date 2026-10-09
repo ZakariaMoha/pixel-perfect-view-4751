@@ -3,18 +3,24 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
 const supabaseAnonKey = import.meta.env["VITE_SUPABASE_ANON_KEY"] as string | undefined;
 
-const hasSupabaseConfig = Boolean(supabaseUrl && supabaseAnonKey);
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
-export const supabase = createClient(
-  hasSupabaseConfig ? (supabaseUrl as string) : "https://placeholder.supabase.co",
-  hasSupabaseConfig ? (supabaseAnonKey as string) : "placeholder-anon-key",
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-    },
-  },
-);
+const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl as string, supabaseAnonKey as string, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    })
+  : null;
 
-export const isSupabaseConfigured = hasSupabaseConfig;
+export function getSupabaseClient() {
+  if (!supabase) {
+    throw new Error(
+      "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in Cloudflare Workers Builds, then redeploy.",
+    );
+  }
+
+  return supabase;
+}

@@ -1,4 +1,4 @@
-import { supabase } from "./supabase/client";
+import { getSupabaseClient } from "./supabase/client";
 
 export async function signInWithMagicLink(email: string) {
   const trimmedEmail = email.trim();
@@ -7,7 +7,7 @@ export async function signInWithMagicLink(email: string) {
     throw new Error("Email is required.");
   }
 
-  const { data, error } = await supabase.auth.signInWithOtp({
+  const { data, error } = await getSupabaseClient().auth.signInWithOtp({
     email: trimmedEmail,
     options: {
       shouldCreateUser: true,
@@ -23,7 +23,7 @@ export async function signInWithMagicLink(email: string) {
 }
 
 export async function signOut() {
-  const { error } = await supabase.auth.signOut();
+  const { error } = await getSupabaseClient().auth.signOut();
 
   if (error) {
     throw error;
@@ -31,7 +31,7 @@ export async function signOut() {
 }
 
 export async function getSession() {
-  const { data, error } = await supabase.auth.getSession();
+  const { data, error } = await getSupabaseClient().auth.getSession();
 
   if (error) {
     throw error;
@@ -41,7 +41,7 @@ export async function getSession() {
 }
 
 export async function getUser() {
-  const { data, error } = await supabase.auth.getUser();
+  const { data, error } = await getSupabaseClient().auth.getUser();
 
   if (error) {
     throw error;

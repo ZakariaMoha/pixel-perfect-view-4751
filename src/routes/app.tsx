@@ -121,7 +121,7 @@ function AdminLayout() {
     let isMounted = true;
 
     void import("@/lib/supabase/client")
-      .then(({ supabase }) => supabase.auth.getSession())
+      .then(({ getSupabaseClient }) => getSupabaseClient().auth.getSession())
       .then(({ data, error }) => {
         if (!isMounted) {
           return;
