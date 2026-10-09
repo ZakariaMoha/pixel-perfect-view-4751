@@ -18,20 +18,20 @@ import { BrandLogo } from "@/components/brand";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "TradeHub — From 1688 to Nairobi. Tracked. Trusted. Delivered." },
+      { title: "TradeHub — From China to the world. Tracked. Trusted. Delivered." },
       {
         name: "description",
         content:
-          "TradeHub is the trade and logistics platform for the China to Kenya import corridor: sourcing, RFQs, orders, shipments, FX and payments in one workspace.",
+          "TradeHub is the trade and logistics platform for the global China-to-world corridor: sourcing, RFQs, orders, shipments, FX and payments in one workspace.",
       },
       {
         property: "og:title",
-        content: "TradeHub — China to Kenya trade, in one place",
+        content: "TradeHub — From China to the world, in one place",
       },
       {
         property: "og:description",
         content:
-          "Source from 1688, compare agent quotes, track shipments to Nairobi and invoice in KES from one operating workspace.",
+          "Source from China, compare agent quotes, track shipments worldwide and invoice in KES from one operating workspace.",
       },
     ],
   }),
@@ -96,7 +96,7 @@ const steps = [
   {
     n: "05",
     t: "Produce & inspect",
-    d: "1688 purchase, production photos, pre-shipment inspection.",
+    d: "Supplier purchase, production photos, pre-shipment inspection.",
   },
   {
     n: "06",
@@ -143,12 +143,12 @@ function Landing() {
             <ShieldCheck size={13} /> Trusted by 120+ Kenyan importers
           </Badge>
           <h1 className="mt-7 text-5xl font-bold leading-[1.05] tracking-[-0.04em] md:text-7xl">
-            From China to Nairobi.
+            From China to the world.
             <br />
             <span className="gradient-text">Tracked. Trusted. Delivered.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            One workspace for the China–Kenya import corridor: sourcing requests, agent quotes,
+            One workspace for the China-to-world corridor: sourcing requests, agent quotes,
             production, freight, customs, FX and invoicing — with milestones, pricing, and status in
             one place.
           </p>

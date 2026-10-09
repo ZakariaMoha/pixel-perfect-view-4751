@@ -78,16 +78,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#FFFFFF" },
-      { title: "TradeHub — China to Kenya trade management" },
+      { title: "TradeHub — From China to the world" },
       {
         name: "description",
         content:
-          "TradeHub centralises sourcing, orders, logistics and payments for the China to Kenya import corridor.",
+          "TradeHub centralises sourcing, orders, logistics and payments for the global China-to-world corridor.",
       },
       { property: "og:title", content: "TradeHub" },
       {
         property: "og:description",
-        content: "From 1688 to Nairobi. Tracked. Trusted. Delivered.",
+        content: "From China to the world. Tracked. Trusted. Delivered.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

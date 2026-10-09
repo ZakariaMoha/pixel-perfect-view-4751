@@ -10,7 +10,7 @@ export const Route = createFileRoute("/app/orders/")({
       { title: "Orders — TradeHub" },
       {
         name: "description",
-        content: "Every China to Kenya order with status, value, margin and ETA.",
+        content: "Every China-to-world order with status, value, margin and ETA.",
       },
       { property: "og:title", content: "Orders — TradeHub" },
       { property: "og:description", content: "Track order status, value, margin and ETA." },
