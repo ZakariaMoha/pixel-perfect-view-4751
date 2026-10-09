@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAgentsRouteImport } from './routes/app.agents'
+import { Route as AppBrandRouteImport } from './routes/app.brand'
 import { Route as AppClientsRouteImport } from './routes/app.clients'
 import { Route as AppFxRouteImport } from './routes/app.fx'
 import { Route as AppInboxRouteImport } from './routes/app.inbox'
@@ -60,6 +61,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppAgentsRoute = AppAgentsRouteImport.update({
   id: '/agents',
   path: '/agents',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBrandRoute = AppBrandRouteImport.update({
+  id: '/brand',
+  path: '/brand',
   getParentRoute: () => AppRoute,
 } as any)
 const AppClientsRoute = AppClientsRouteImport.update({
@@ -178,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/app/agents': typeof AppAgentsRoute
+  '/app/brand': typeof AppBrandRoute
   '/app/clients': typeof AppClientsRoute
   '/app/fx': typeof AppFxRoute
   '/app/inbox': typeof AppInboxRoute
@@ -206,6 +213,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/app/agents': typeof AppAgentsRoute
+  '/app/brand': typeof AppBrandRoute
   '/app/clients': typeof AppClientsRoute
   '/app/fx': typeof AppFxRoute
   '/app/inbox': typeof AppInboxRoute
@@ -235,6 +243,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/app/agents': typeof AppAgentsRoute
+  '/app/brand': typeof AppBrandRoute
   '/app/clients': typeof AppClientsRoute
   '/app/fx': typeof AppFxRoute
   '/app/inbox': typeof AppInboxRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/app/agents'
+    | '/app/brand'
     | '/app/clients'
     | '/app/fx'
     | '/app/inbox'
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/app/agents'
+    | '/app/brand'
     | '/app/clients'
     | '/app/fx'
     | '/app/inbox'
@@ -322,6 +333,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/app/agents'
+    | '/app/brand'
     | '/app/clients'
     | '/app/fx'
     | '/app/inbox'
@@ -390,6 +402,13 @@ declare module '@tanstack/react-router' {
       path: '/agents'
       fullPath: '/app/agents'
       preLoaderRoute: typeof AppAgentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/brand': {
+      id: '/app/brand'
+      path: '/brand'
+      fullPath: '/app/brand'
+      preLoaderRoute: typeof AppBrandRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/clients': {
@@ -573,6 +592,7 @@ const AppPaymentsRouteWithChildren = AppPaymentsRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppAgentsRoute: typeof AppAgentsRoute
+  AppBrandRoute: typeof AppBrandRoute
   AppClientsRoute: typeof AppClientsRoute
   AppFxRoute: typeof AppFxRoute
   AppInboxRoute: typeof AppInboxRoute
@@ -592,6 +612,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAgentsRoute: AppAgentsRoute,
+  AppBrandRoute: AppBrandRoute,
   AppClientsRoute: AppClientsRoute,
   AppFxRoute: AppFxRoute,
   AppInboxRoute: AppInboxRoute,
