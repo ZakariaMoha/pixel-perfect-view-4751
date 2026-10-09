@@ -91,6 +91,24 @@ export type Order = {
   carrier?: string;
   trackingNumber?: string;
   trackingUpdates?: ShipmentUpdate[];
+  partnerDocument?: {
+    name: string;
+    mimeType: string;
+    dataUrl: string;
+    uploadedAt: string;
+  };
+  cbmCalculation?: {
+    lengthCm: number;
+    widthCm: number;
+    heightCm: number;
+    packageCount: number;
+  };
+  deliveryNote?: {
+    number: string;
+    generatedAt: string;
+    status: "Generated" | "Ready to send" | "Sent to client";
+    sentAt?: string;
+  };
 };
 
 export type ShipmentUpdate = {

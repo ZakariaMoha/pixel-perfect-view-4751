@@ -1,5 +1,5 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
-import { Camera, CheckCircle2, PackageCheck, Plus, Ship, Truck } from "lucide-react";
+import { Camera, CheckCircle2, Eye, PackageCheck, Plus, Ship, Truck } from "lucide-react";
 import { toast } from "sonner";
 import {
   Badge,
@@ -11,6 +11,7 @@ import {
   Table,
   TableSkeleton,
 } from "@/components/kit";
+import { ShipmentPartnerWorkflow } from "@/components/ShipmentPartnerWorkflow";
 import {
   Dialog,
   DialogContent,
@@ -77,6 +78,7 @@ export function ShipmentTracker({ onPartners }: ShipmentTrackerProps) {
   const [trackingNumber, setTrackingNumber] = useState("");
   const [note, setNote] = useState("");
   const [photos, setPhotos] = useState<string[]>([]);
+  const [selectedDetailOrderId, setSelectedDetailOrderId] = useState<string | null>(null);
 
   const activeOrders = collection.records.filter(
     (order) => order.status !== "DELIVERED" && order.status !== "CANCELLED",
@@ -97,6 +99,10 @@ export function ShipmentTracker({ onPartners }: ShipmentTrackerProps) {
       }),
     [collection.records, filter, search],
   );
+  const selectedDetailOrder =
+    collection.records.find((order) => order.id === selectedDetailOrderId) ?? null;
+
+  const openDetails = (order: Order) => setSelectedDetailOrderId(order.id);
 
   const openUpdate = (order: Order) => {
     setSelectedOrderId(order.id);
@@ -305,11 +311,17 @@ export function ShipmentTracker({ onPartners }: ShipmentTrackerProps) {
               {visibleOrders.map((order) => {
                 const latest = latestShipmentUpdate(order.trackingUpdates);
                 return (
-                  <tr key={order.id} className="border-b border-border/60 last:border-0">
+                  <tr
+                    key={order.id}
+                    aria-label={`Open shipment ${order.code}`}
+                    className="cursor-pointer border-b border-border/60 last:border-0 hover:bg-bg-glass-hover"
+                    onClick={() => openDetails(order)}
+                  >
                     <td className="max-w-56 px-4 py-3">
                       <a
                         className="font-mono text-accent hover:underline"
                         href={`/app/orders/${order.id}`}
+                        onClick={(event) => event.stopPropagation()}
                       >
                         {order.code}
                       </a>
@@ -335,9 +347,25 @@ export function ShipmentTracker({ onPartners }: ShipmentTrackerProps) {
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Button
+                        aria-label={`Open ${order.code} partner workflow`}
+                        className="px-2"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          openDetails(order);
+                        }}
+                        title="Open partner workflow"
+                        type="button"
+                        variant="ghost"
+                      >
+                        <Eye size={16} />
+                      </Button>
+                      <Button
                         aria-label={`Update ${order.code}`}
                         className="px-2"
-                        onClick={() => openUpdate(order)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          openUpdate(order);
+                        }}
                         title="Add shipment update"
                         type="button"
                         variant="ghost"
@@ -352,12 +380,18 @@ export function ShipmentTracker({ onPartners }: ShipmentTrackerProps) {
           </div>
           <div className="grid min-w-0 gap-3 md:hidden">
             {visibleOrders.map((order) => (
-              <Card key={order.id} className="min-w-0 !p-4">
+              <Card
+                key={order.id}
+                aria-label={`Open shipment ${order.code}`}
+                className="min-w-0 !p-4"
+                onClick={() => openDetails(order)}
+              >
                 <div className="flex min-w-0 items-start justify-between gap-3">
                   <div className="min-w-0">
                     <a
                       className="font-mono text-sm text-accent hover:underline"
                       href={`/app/orders/${order.id}`}
+                      onClick={(event) => event.stopPropagation()}
                     >
                       {order.code}
                     </a>
@@ -392,8 +426,25 @@ export function ShipmentTracker({ onPartners }: ShipmentTrackerProps) {
                 </div>
                 <div className="mt-4">{renderProgress(order)}</div>
                 <div className="mt-4">{renderLatestUpdate(order)}</div>
-                <div className="mt-3 flex justify-end">
-                  <Button onClick={() => openUpdate(order)} type="button" variant="glass">
+                <div className="mt-3 flex flex-wrap justify-end gap-2">
+                  <Button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openDetails(order);
+                    }}
+                    type="button"
+                    variant="glass"
+                  >
+                    <Eye size={15} /> Partner workflow
+                  </Button>
+                  <Button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openUpdate(order);
+                    }}
+                    type="button"
+                    variant="glass"
+                  >
                     <Plus size={15} /> Add update
                   </Button>
                 </div>
@@ -539,6 +590,13 @@ export function ShipmentTracker({ onPartners }: ShipmentTrackerProps) {
           </form>
         </DialogContent>
       </Dialog>
+      <ShipmentPartnerWorkflow
+        onAddUpdate={openUpdate}
+        onClose={() => setSelectedDetailOrderId(null)}
+        onUpdate={collection.update}
+        order={selectedDetailOrder}
+        orders={collection.records}
+      />
     </>
   );
 }
